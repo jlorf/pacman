@@ -24,7 +24,7 @@ function setup() {
       }   
     }
 
-    mapa.Maze[getRandomArbitrary(0, mapa.Rows)][getRandomArbitrary(0, mapa.Columns)] = 4;
+    mapa.Maze[getRandomArbitrary(0, mapa.Rows - 1)][getRandomArbitrary(0, mapa.Columns - 1)] = 4;
 
     createCanvas(height, width);
     $("canvas").css("position", "absolute");
@@ -37,22 +37,25 @@ function setup() {
     background(220);
     for (i = 0; i < mapa.Maze.length; i++){
         for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-          if (mapa.Maze[i][i2] === 0)
-          {
-              image(bola, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
-          } else if (mapa.Maze[i][i2] === 1)
-          {
-              image(paret, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
-          } else if (mapa.Maze[i][i2] === 2)
-          {
-              image(fantasma1, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
-          } else if (mapa.Maze[i][i2] === 3)
-          {
-              image(fantasma2, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
-          } else if(mapa.Maze[i][i2] === 4)
-          {
-            image(comecocos, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
+          let img;
+          switch(mapa.Maze[i][i2]){
+            case 0:
+              img = bola;
+              break;
+              case 1:
+                img = paret;
+                break;
+              case 2:
+                img = fantasma1;
+                break;
+              case 3:
+                img = fantasma2;
+                break;
+              case 4:
+                img = comecocos;
+                break;
           }
+          image(img, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
         }   
     }
   }

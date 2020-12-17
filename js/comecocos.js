@@ -34,6 +34,20 @@ function setup() {
     // cells.filter(i => i.filter(i2 => i2.connections.right === true || i2.connections.down === true || i2.connections.up  === true|| i2.connections.left === true).length > 0).forEach(function(cela){
       cela.forEach(function(cela2){
         mapa.Maze[cela2.y - 1][cela2.x - 1] = (cela2?.connections?.right == true || cela2?.connections?.down == true || cela2?.connections?.up  == true || cela2?.connections?.left == true) ? 1 : -1;
+        // if (cela2?.connections?.right == true){
+        //   mapa.Maze[(cela2.y - 1) + 1][cela2.x - 1] = 1;
+        // }
+        // if (cela2?.connections?.down == true)
+        // {
+        //   mapa.Maze[cela2.y - 1][(cela2.x - 1) + 1] = 1;
+        // }
+        // if (cela2?.connections?.up  == true)
+        // {
+        //   mapa.Maze[cela2.y - 1][cela2.x - 2] = 1;
+        // }
+        // if (cela2?.connections?.left == true) {
+        //   mapa.Maze[cela2.y - 2][cela2.x - 1] = 1;
+        // }
         // mapa.Maze[cela2.y][cela2.x] = 1;
       });
     });
@@ -70,8 +84,7 @@ function setup() {
     //   }   
     // }
 
-    pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
-    pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
+    posicioPacman();
     mapa.Maze[pospacman.row][pospacman.column] = 4;
 
     createCanvas(height, width);
@@ -80,6 +93,12 @@ function setup() {
     $("canvas").css("top", "50%");
     $("canvas").css("left", "50%");
     $("canvas").addClass("transform");
+
+  function posicioPacman() {
+    pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
+    pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
+    if (mapa.Maze[pospacman.row][pospacman.column] != -1) posicioPacman();
+  }
   }
   
   function draw() {

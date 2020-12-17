@@ -28,11 +28,47 @@ function setup() {
     
     pospacman = new Posicio(0, 0);
 
+    let cells = generateEllerMaze(mapa.Maze);
+
+    cells.filter(i => true).forEach(function(cela){
+    // cells.filter(i => i.filter(i2 => i2.connections.right === true || i2.connections.down === true || i2.connections.up  === true|| i2.connections.left === true).length > 0).forEach(function(cela){
+      cela.forEach(function(cela2){
+        mapa.Maze[cela2.y - 1][cela2.x - 1] = (cela2?.connections?.right == true || cela2?.connections?.down == true || cela2?.connections?.up  == true || cela2?.connections?.left == true) ? 1 : -1;
+        // mapa.Maze[cela2.y][cela2.x] = 1;
+      });
+    });
+
+    // for (i = 0; i < mapa.Maze.length; i++){
+    //   for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
+    //     if (cells.filter(it => it.filter(it2 => it2.set === `${i}|${i2}`).length > 0).length > 0)
+    //       mapa.Maze[i][i2] = 1;
+    //       else mapa.Maze[i][i2] = -1;
+    //     // cells.filter(it => it.filter(it2 => it2.set === `${i}|${i2}`).length > 0).forEach(function(item){
+    //     //   item.forEach(function(item2){
+    //     //     if (mapa.Maze[item2.y] !== undefined){
+    //     //       mapa.Maze[item2.y][item2.x] = 1;
+    //     //     }
+    //     //   });
+    //     // });
+    //   }   
+    // }
+
     for (i = 0; i < mapa.Maze.length; i++){
       for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-        mapa.Maze[i][i2] = getRandomArbitrary(0, 3);
+        if (mapa.Maze[i][i2] !== 1) 
+        {
+          let rnd = getRandomArbitrary(0, 3);
+          if (rnd == 1) rnd = -1;
+          mapa.Maze[i][i2] = rnd;
+        }
       }   
     }
+
+    // for (i = 0; i < mapa.Maze.length; i++){
+    //   for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
+    //     mapa.Maze[i][i2] = getRandomArbitrary(0, 3);
+    //   }   
+    // }
 
     pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
     pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
@@ -86,7 +122,9 @@ function setup() {
                   img = comecocos;
                   break;
             }
+            try{
             image(img, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
+            } catch{}
         }   
     }
   }

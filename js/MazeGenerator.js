@@ -62,7 +62,7 @@ function generateEllerMaze(array) {
             
             if (!cells[y][x]) {
                 //Step 2: create each cell in this row if it doesn't exist yet, assign a unique set
-                let setID = `${y}${x}`;
+                let setID = `${y}|${x}`;
                 let uniqueSet = new Set()
                 let cell = {x: x, y: y, set: setID, connections: {}};
                 cells[y][x] = cell;

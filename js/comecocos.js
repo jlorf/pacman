@@ -42,6 +42,12 @@ function setup() {
         if (c.connections.down) {
           mapa.Maze[c.x][c.y + 1] = 1;
         }
+        if (c.connections.up){
+          mapa.Maze[c.x][c.y - 1] = 1;
+        }
+        if (c.connections.left) {
+          mapa.Maze[c.x - 1][c.y] = 1;
+        }
       }
     });
     j += 2;

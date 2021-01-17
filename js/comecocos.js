@@ -1,5 +1,5 @@
 var mapa;
-
+var canvasp5;
 let paret;
 let comecocos;
 let bola;
@@ -9,298 +9,203 @@ let transparent;
 
 let esquerra, dreta, abaix, amunt;
 
+let maximfantasmes = 5;
+let fantasmes = 0;
+let fantasmesobject = [];
+
 let pospacman;
 
-function preload() {
-  paret = loadImage('imatges/wall.png');
-  comecocos = loadImage('imatges/comecocos.png');
-  bola = loadImage('imatges/bola.png');
-  fantasma1 = loadImage('imatges/fantasma.png');
-  fantasma2 = loadImage('imatges/fantasma2.png');
-  transparent = loadImage('imatges/transparent.png');
-}
+const s = p => {
+  p.preload = function() {
+    paret = p.loadImage("imatges/wall.png");
+    comecocos = p.loadImage("imatges/comecocos.png");
+    bola = p.loadImage("imatges/bola.png");
+    fantasma1 = p.loadImage("imatges/fantasma.png");
+    fantasma2 = p.loadImage("imatges/fantasma2.png");
+    transparent = p.loadImage("imatges/transparent.png");
+  };
 
-function setup() {
+  p.setup = function() {
     esquerra = dreta = amunt = abaix = false;
-    mapa = new Mapa(25, 25, 32)
+    mapa = new Mapa(25, 25, 32);
     let height = mapa.Rows * mapa.SIZE_IMAGE;
     let width = mapa.Columns * mapa.SIZE_IMAGE;
-    
+
     pospacman = new Posicio(0, 0);
 
     let cells = generateEllerMaze(mapa.Maze);
 
     //draw
-  let j = 1;
-  function recursiveDrawMaze() {
-    cells[j].forEach((c) => {
-      if (c) {
-        mapa.Maze[c.x][c.y] = 1;
-        if (c.connections.right) {
-          mapa.Maze[c.x + 1][c.y] = 1;
+    let j = 1;
+    function recursiveDrawMaze() {
+      cells[j].forEach(c => {
+        if (c) {
+          mapa.Maze[c.x][c.y] = 1;
+          if (c.connections.right) {
+            mapa.Maze[c.x + 1][c.y] = 1;
+          }
+          if (c.connections.down) {
+            mapa.Maze[c.x][c.y + 1] = 1;
+          }
+          if (c.connections.up) {
+            mapa.Maze[c.x][c.y - 1] = 1;
+          }
+          if (c.connections.left) {
+            mapa.Maze[c.x - 1][c.y] = 1;
+          }
         }
-        if (c.connections.down) {
-          mapa.Maze[c.x][c.y + 1] = 1;
-        }
-        if (c.connections.up){
-          mapa.Maze[c.x][c.y - 1] = 1;
-        }
-        if (c.connections.left) {
-          mapa.Maze[c.x - 1][c.y] = 1;
-        }
+      });
+      j += 2;
+      if (j < cells.length) {
+        recursiveDrawMaze();
       }
-    });
-    j += 2;
-    if (j < cells.length) {
-      recursiveDrawMaze();
     }
-  }
-  recursiveDrawMaze();
+    recursiveDrawMaze();
 
-  for (i = 0; i < mapa.Maze.length; i++){
-    for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-      if (mapa.Maze[i][i2] !== 1) mapa.Maze[i][i2] = -1;
-    }   
-  }
-
-    // let arrayprova = cells.filter(it => true)[0];
-
-
-    // arrayprova = arrayprova.concat(cells.filter(it => true));
-
-    // arrayprova.forEach(function(arr){
-    //   if (arr !== undefined)
-    //   {
-    //     if (arr.length == undefined){
-    //       mapa.Maze[arr.y - 1][arr.x - 1] = 1;
-    //       if (arr?.connections?.right == true){
-    //         mapa.Maze[(arr.y - 1) + 1][arr.x - 1] = 1;
-    //       }
-    //       if (arr?.connections?.down == true)
-    //       {
-    //         mapa.Maze[arr.y - 1][(arr.x - 1) + 1] = 1;
-    //       }
-    //       if (arr?.connections?.up  == true)
-    //       {
-    //         mapa.Maze[arr.y - 1][arr.x - 2] = 1;
-    //       }
-    //       if (arr?.connections?.left == true) {
-    //         mapa.Maze[arr.y - 2][arr.x - 1] = 1;
-    //       }
-    //     }
-    //     else{
-    //       arr.forEach(function(arr2){
-    //         mapa.Maze[arr2.y - 1][arr2.x - 1] = 1;
-    //         if (arr2?.connections?.right == true){
-    //           mapa.Maze[(arr2.y - 1) + 1][arr2.x - 1] = 1;
-    //         }
-    //         if (arr2?.connections?.down == true)
-    //         {
-    //           mapa.Maze[arr2.y - 1][(arr2.x - 1) + 1] = 1;
-    //         }
-    //         if (arr2?.connections?.up  == true)
-    //         {
-    //           mapa.Maze[arr2.y - 1][arr2.x - 2] = 1;
-    //         }
-    //         if (arr2?.connections?.left == true) {
-    //           mapa.Maze[arr2.y - 2][arr2.x - 1] = 1;
-    //         }
-    //       });
-    //     }
-    //   }
-    // });
-
-    // for (i = 0; i < mapa.Maze.length; i++){
-    //   for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-    //     mapa.Maze[i][i2] = 1;
-    //   }   
-    // }
-
-
-    // for (i = 0; i < mapa.Maze.length; i++){
-    //   for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-    //     if (arrayprova.filter(it => (it.y - 1) == i && (it.x - 1) == i2).length > 0){
-    //       mapa.Maze[i][i2] = -1;  
-    //     }
-    //   }   
-    // }
-
-    // cells.forEach(function(cell){
-    //   cell.forEach(function(cela){
-    //     if (cela.connections.right !== true && cela.connections.down !== true && cela.connections.up !== true && cela.connections.left !== true){
-    //       mapa.Maze[cela.y -1][cela.x -1] = -1;  
-    //     }
-    //   });
-    // });
-
-    // cells.filter(i => true).forEach(function(cela){
-    // // cells.filter(i => i.filter(i2 => i2.connections.right === true || i2.connections.down === true || i2.connections.up  === true|| i2.connections.left === true).length > 0).forEach(function(cela){
-    //   cela.forEach(function(cela2){
-    //     //mapa.Maze[cela2.y - 1][cela2.x - 1] = (cela2?.connections?.right == true || cela2?.connections?.down == true || cela2?.connections?.up  == true || cela2?.connections?.left == true) ? 1 : -1;
-    //     if (cela2?.connections?.right == true){
-    //       mapa.Maze[(cela2.y - 1) + 1][cela2.x - 1] = -1;
-    //     }
-    //     if (cela2?.connections?.down == true)
-    //     {
-    //       mapa.Maze[cela2.y - 1][(cela2.x - 1) + 1] = -1;
-    //     }
-    //     if (cela2?.connections?.up  == true)
-    //     {
-    //       mapa.Maze[cela2.y - 1][cela2.x - 2] = -1;
-    //     }
-    //     if (cela2?.connections?.left == true) {
-    //       mapa.Maze[cela2.y - 2][cela2.x - 1] = -1;
-    //     }
-    //   });
-    // });
-
-    // for (i = 0; i < mapa.Maze.length; i++){
-    //   for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-    //     if (cells.filter(it => it.filter(it2 => it2.set === `${i}|${i2}`).length > 0).length > 0)
-    //       mapa.Maze[i][i2] = 1;
-    //       else mapa.Maze[i][i2] = -1;
-    //     // cells.filter(it => it.filter(it2 => it2.set === `${i}|${i2}`).length > 0).forEach(function(item){
-    //     //   item.forEach(function(item2){
-    //     //     if (mapa.Maze[item2.y] !== undefined){
-    //     //       mapa.Maze[item2.y][item2.x] = 1;
-    //     //     }
-    //     //   });
-    //     // });
-    //   }   
-    // }
-
-    // for (i = 0; i < mapa.Maze.length; i++){
-    //   for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-    //     if (mapa.Maze[i][i2] !== 1) 
-    //     {
-    //       let rnd = getRandomArbitrary(0, 3);
-    //       if (rnd == 1) rnd = -1;
-    //       mapa.Maze[i][i2] = rnd;
-    //     }
-    //   }   
-    // }
+    for (i = 0; i < mapa.Maze.length; i++) {
+      for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
+        if (mapa.Maze[i][i2] !== 1) mapa.Maze[i][i2] = -1;
+      }
+    }
 
     posicioPacman();
     mapa.Maze[pospacman.row][pospacman.column] = 4;
 
-    for (i = 0; i < mapa.Maze.length; i++){
-      for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-        if (mapa.Maze[i][i2] !== 1 && mapa.Maze[i][i2] !== 4)
-        {
+    for (i = 0; i < mapa.Maze.length; i++) {
+      for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
+        if (mapa.Maze[i][i2] !== 1 && mapa.Maze[i][i2] !== 4) {
           let rnd = getRandomArbitrary(0, 3);
           if (rnd == 1) rnd = -1;
+          if (rnd == 2 || rnd == 3)
+          {
+            fantasmes++;
+            if (fantasmes > maximfantasmes){
+              rnd = -1;
+            } else {
+              var f = new Fantasma(i, i2);
+              fantasmesobject.push(f);
+            }
+          }
           mapa.Maze[i][i2] = rnd;
-        } 
-          
-      }   
+        }
+      }
     }
 
-
-    createCanvas(height, width);
-    frameRate(30);
+    p.createCanvas(height, width);
+    p.frameRate(30);
     $("canvas").css("position", "absolute");
     $("canvas").css("top", "50%");
     $("canvas").css("left", "50%");
     $("canvas").addClass("transform");
 
-  function posicioPacman() {
-    pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
-    pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
-    if (mapa.Maze[pospacman.row][pospacman.column] != -1) posicioPacman();
-  }
-  }
-  
-  function draw() {
-    background(0);
+    function posicioPacman() {
+      pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
+      pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
+      if (mapa.Maze[pospacman.row][pospacman.column] != -1) posicioPacman();
+    }
+  };
+
+  p.draw = function() {
+    p.background(0);
     let anterior = new Posicio(pospacman.row, pospacman.column);
-    pospacman.row = pospacman.row + (dreta ? 1 : (esquerra ? -1 : 0));
+    pospacman.row = pospacman.row + (dreta ? 1 : esquerra ? -1 : 0);
     if (pospacman.row < 0) pospacman.row = 0;
     else if (pospacman.row > mapa.Rows - 1) pospacman.row = mapa.Rows - 1;
     if (pospacman.column < 0) pospacman.column = 0;
-    else if (pospacman.column > mapa.Columns - 1) pospacman.column = mapa.Columns - 1;
-    pospacman.column = pospacman.column + (amunt ? -1 : (abaix ? 1 : 0));
-    try{
-      if ((anterior.row != pospacman.row || pospacman.column != anterior.column)){
-        if (!ComprovarParets(anterior)){
+    else if (pospacman.column > mapa.Columns - 1)
+      pospacman.column = mapa.Columns - 1;
+    pospacman.column = pospacman.column + (amunt ? -1 : abaix ? 1 : 0);
+    try {
+      if (
+        anterior.row != pospacman.row ||
+        pospacman.column != anterior.column
+      ) {
+        if (!ComprovarParets(anterior)) {
           mapa.Maze[anterior.row][anterior.column] = -1;
           mapa.Maze[pospacman.row][pospacman.column] = 4;
         }
       }
     } catch {}
-    for (i = 0; i < mapa.Maze.length; i++){
-        for (i2 = 0; i2 < mapa.Maze[i].length; i2++){
-          let img;
-            switch(mapa.Maze[i][i2]){
-              case -1:
-                img = transparent;
-                break;
-              case 0:
-                img = bola;
-                break;
-                case 1:
-                  img = paret;
-                  break;
-                case 2:
-                  img = fantasma1;
-                  break;
-                case 3:
-                  img = fantasma2;
-                  break;
-                case 4:
-                  img = comecocos;
-                  break;
-            }
-            try{
-            image(img, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
-            } catch{}
-        }   
+    for (i = 0; i < mapa.Maze.length; i++) {
+      for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
+        let img;
+        switch (mapa.Maze[i][i2]) {
+          case -1:
+            img = transparent;
+            break;
+          case 0:
+            img = bola;
+            break;
+          case 1:
+            img = paret;
+            break;
+          case 2:
+            img = fantasma1;
+            var prova = fantasmesobject.find(f => f.x == i && f.y == i2);
+            debugger;
+            break;
+          case 3:
+            img = fantasma2;
+            break;
+          case 4:
+            img = comecocos;
+            break;
+        }
+        try {
+          p.image(img, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
+        } catch {}
+      }
     }
-  }
+  };
 
-  function keyPressed() {
+  p.keyPressed = function() {
     esquerra = dreta = amunt = abaix = false;
-    if (keyCode === LEFT_ARROW) {
+    if (p.keyCode === p.LEFT_ARROW) {
       esquerra = true;
-    } else if (keyCode === RIGHT_ARROW) {
+    } else if (p.keyCode === p.RIGHT_ARROW) {
       dreta = true;
-    } else if (keyCode === UP_ARROW) {
+    } else if (p.keyCode === p.UP_ARROW) {
       amunt = true;
-    } else if (keyCode === DOWN_ARROW) {
+    } else if (p.keyCode === p.DOWN_ARROW) {
       abaix = true;
     }
-  }
+  };
+};
 
-  function getRandomArbitrary(min, max) {
-    return Math.round(Math.random() * (max - min) + min);
-  }
+function getRandomArbitrary(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
 
-  function ComprovarParets(anterior){
-    let paret = mapa.Maze[pospacman.row][pospacman.column] == 1;
-    if (paret){
-      pospacman = new Posicio(anterior.row, anterior.column);
-      esquerra = dreta = amunt = abaix = false;
-    }
-    if (pospacman.row >= mapa.Rows){
-      pospacman = new Posicio(anterior.row, anterior.column);
-      esquerra = dreta = amunt = abaix = false;
-    } else if (pospacman.row < 0){
-      esquerra = dreta = amunt = abaix = false;
-      pospacman = new Posicio(anterior.row, anterior.column);
-    }
-    if (pospacman.column >= mapa.Columns){
-      pospacman = new Posicio(anterior.row, anterior.column);
-      esquerra = dreta = amunt = abaix = false;
-    } else if (pospacman.column < 0){
-      esquerra = dreta = amunt = abaix = false;
-      pospacman = new Posicio(anterior.row, anterior.column);
-    }
-    return paret;
+function ComprovarParets(anterior) {
+  let paret = mapa.Maze[pospacman.row][pospacman.column] == 1;
+  if (paret) {
+    pospacman = new Posicio(anterior.row, anterior.column);
+    esquerra = dreta = amunt = abaix = false;
   }
-
-
-  class Posicio {
-    constructor(row, column) {
-      this.row = row;
-      this.column = column;
-    }
+  if (pospacman.row >= mapa.Rows) {
+    pospacman = new Posicio(anterior.row, anterior.column);
+    esquerra = dreta = amunt = abaix = false;
+  } else if (pospacman.row < 0) {
+    esquerra = dreta = amunt = abaix = false;
+    pospacman = new Posicio(anterior.row, anterior.column);
   }
+  if (pospacman.column >= mapa.Columns) {
+    pospacman = new Posicio(anterior.row, anterior.column);
+    esquerra = dreta = amunt = abaix = false;
+  } else if (pospacman.column < 0) {
+    esquerra = dreta = amunt = abaix = false;
+    pospacman = new Posicio(anterior.row, anterior.column);
+  }
+  return paret;
+}
+
+class Posicio {
+  constructor(row, column) {
+    this.row = row;
+    this.column = column;
+  }
+}
+
+$( document ).ready(function() {
+  canvasp5 = new p5(s, 'pacman')
+});

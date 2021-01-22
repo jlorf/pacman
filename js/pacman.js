@@ -6,7 +6,6 @@ class Pacman extends GameObject {
 
     Moure (mapa) {
         try {
-            debugger;
             let anterior = new Posicio(this.y, this.x);
             this.y = this.y + (this.direction == 0 ? 1 : this.direction == 1 ? -1 : 0);
             if (this.y < 0) this.y = 0;

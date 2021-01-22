@@ -17,6 +17,8 @@ let maximfantasmes = 5;
 let fantasmes = 0;
 let fantasmesobject = [];
 
+let roquesobject = [];
+
 let pospacman;
 
 let pacman;
@@ -76,6 +78,7 @@ const s = p => {
     for (i = 0; i < mapa.Maze.length; i++) {
       for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
         if (mapa.Maze[i][i2] !== 1) mapa.Maze[i][i2] = -1;
+        else roquesobject.push(new Roca(i, i2));
       }
     }
 
@@ -150,21 +153,21 @@ const s = p => {
     }
     mapa.Maze[pacman.y][pacman.x] = 4;
 
-    // fantasmesobject.forEach(fantasma => {
-    //   try {
-    //     // var ftipus = mapa.Maze[fantasma.x][fantasma.y];
-    //     // if (ftipus == -1) ftipus = 2;
-    //     mapa.Maze[fantasma.x][fantasma.y] = -1;
-    //     var index = fantasmesobject.indexOf(fantasma);
-    //     var fantasma2 = fantasma.Moure(mapa);
-    //     if (fantasma2 !== null && fantasma2 != undefined) fantasmesobject[index] = fantasma2;
-    //     mapa.Maze[fantasma2.x][fantasma2.y] = fantasma.tipus;
-    //     // debugger;
-    //   }
-    //   catch (e) {
-    //     debugger;
-    //   }
-    // });
+    fantasmesobject.forEach(fantasma => {
+      try {
+        // var ftipus = mapa.Maze[fantasma.x][fantasma.y];
+        // if (ftipus == -1) ftipus = 2;
+        mapa.Maze[fantasma.x][fantasma.y] = -1;
+        var index = fantasmesobject.indexOf(fantasma);
+        var fantasma2 = fantasma.Moure(mapa);
+        if (fantasma2 !== null && fantasma2 != undefined) fantasmesobject[index] = fantasma2;
+        mapa.Maze[fantasma2.x][fantasma2.y] = fantasma.tipus;
+        // debugger;
+      }
+      catch (e) {
+        debugger;
+      }
+    });
 
     for (i = 0; i < mapa.Maze.length; i++) {
       for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {

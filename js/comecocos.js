@@ -2,6 +2,10 @@ var mapa;
 var canvasp5;
 let paret;
 let comecocos;
+let comecocosdreta;
+let comecocosesquerra;
+let comecocosamunt;
+let comecocosabaix;
 let bola;
 let fantasma1;
 let fantasma2;
@@ -20,11 +24,15 @@ let pacman;
 const s = p => {
   p.preload = function () {
     paret = p.loadImage("imatges/wall.png");
-    comecocos = p.loadImage("imatges/comecocos.png");
+    comecocosdreta = p.loadImage("imatges/pacman.gif");
+    comecocosesquerra = p.loadImage("imatges/pacmanesquerra.gif");
+    comecocosamunt = p.loadImage("imatges/pacmanamunt.gif");
+    comecocosabaix = p.loadImage("imatges/pacmanabaix.gif");
     bola = p.loadImage("imatges/bola.png");
     fantasma1 = p.loadImage("imatges/fantasma.png");
     fantasma2 = p.loadImage("imatges/fantasma2.png");
     transparent = p.loadImage("imatges/transparent.png");
+    comecocos = comecocosdreta;
   };
 
   p.setup = function () {
@@ -132,24 +140,31 @@ const s = p => {
     //   }
     // } catch { }
     mapa.Maze[pacman.y][pacman.x] = -1;
-    pacman = pacman.Moure(mapa, dreta, esquerra, amunt, abaix);
+    pacman = pacman.Moure(mapa);
+    //comecocos = dreta ? comecocosdreta : esquerra ? comecocosesquerra : amunt ? comecocosamunt : abaix ? comecocosabaix : comecocosdreta;
+    switch(pacman.direction){
+      case 0: comecocos = comecocosdreta; break;
+      case 1: comecocos = comecocosesquerra; break;
+      case 2: comecocos = comecocosamunt; break;
+      case 3: comecocos = comecocosabaix; break;
+    }
     mapa.Maze[pacman.y][pacman.x] = 4;
 
-    fantasmesobject.forEach(fantasma => {
-      try {
-        // var ftipus = mapa.Maze[fantasma.x][fantasma.y];
-        // if (ftipus == -1) ftipus = 2;
-        mapa.Maze[fantasma.x][fantasma.y] = -1;
-        var index = fantasmesobject.indexOf(fantasma);
-        var fantasma2 = fantasma.Moure(mapa);
-        if (fantasma2 !== null && fantasma2 != undefined) fantasmesobject[index] = fantasma2;
-        mapa.Maze[fantasma2.x][fantasma2.y] = fantasma.tipus;
-        // debugger;
-      }
-      catch (e) {
-        debugger;
-      }
-    });
+    // fantasmesobject.forEach(fantasma => {
+    //   try {
+    //     // var ftipus = mapa.Maze[fantasma.x][fantasma.y];
+    //     // if (ftipus == -1) ftipus = 2;
+    //     mapa.Maze[fantasma.x][fantasma.y] = -1;
+    //     var index = fantasmesobject.indexOf(fantasma);
+    //     var fantasma2 = fantasma.Moure(mapa);
+    //     if (fantasma2 !== null && fantasma2 != undefined) fantasmesobject[index] = fantasma2;
+    //     mapa.Maze[fantasma2.x][fantasma2.y] = fantasma.tipus;
+    //     // debugger;
+    //   }
+    //   catch (e) {
+    //     debugger;
+    //   }
+    // });
 
     for (i = 0; i < mapa.Maze.length; i++) {
       for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
@@ -175,7 +190,7 @@ const s = p => {
             break;
         }
         try {
-          p.image(img, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
+          if (img != null) p.image(img, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
         } catch { }
       }
     }
@@ -185,12 +200,16 @@ const s = p => {
     esquerra = dreta = amunt = abaix = false;
     if (p.keyCode === p.LEFT_ARROW) {
       esquerra = true;
+      pacman.direction = 1;
     } else if (p.keyCode === p.RIGHT_ARROW) {
       dreta = true;
+      pacman.direction = 0;
     } else if (p.keyCode === p.UP_ARROW) {
       amunt = true;
+      pacman.direction = 2;
     } else if (p.keyCode === p.DOWN_ARROW) {
       abaix = true;
+      pacman.direction = 3;
     }
   };
 };

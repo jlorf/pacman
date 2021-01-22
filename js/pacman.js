@@ -1,18 +1,20 @@
 class Pacman extends GameObject {
+    direction = -1;
     constructor(x, y) {
         super(x, y);
     }
 
-    Moure = function (mapa, dreta, esquerra, amunt, abaix) {
+    Moure (mapa) {
         try {
+            debugger;
             let anterior = new Posicio(this.y, this.x);
-            this.y = this.y + (dreta ? 1 : esquerra ? -1 : 0);
+            this.y = this.y + (this.direction == 0 ? 1 : this.direction == 1 ? -1 : 0);
             if (this.y < 0) this.y = 0;
             else if (this.y > mapa.Rows - 1) this.y = mapa.Rows - 1;
             if (this.x < 0) this.x = 0;
             else if (this.x > mapa.Columns - 1)
                 this.x = mapa.Columns - 1;
-            this.x = this.x + (amunt ? -1 : abaix ? 1 : 0);
+            this.x = this.x + (this.direction == 2 ? -1 : this.direction == 3 ? 1 : 0);
             try {
                 if (
                     anterior.row != this.y ||
@@ -32,25 +34,25 @@ class Pacman extends GameObject {
         return this;
     };
 
-    ComprovarParets = function (anterior, mapa) {
+    ComprovarParets (anterior, mapa) {
         let paret = mapa.Maze[this.y][this.x] == 1;
         let posthis;
         if (paret) {
             posthis = new Posicio(anterior.row, anterior.column);
-            esquerra = dreta = amunt = abaix = false;
+            this.direction = -1;
         }
         if (this.y >= mapa.Rows) {
             posthis = new Posicio(anterior.row, anterior.column);
-            esquerra = dreta = amunt = abaix = false;
+            this.direction = -1;
         } else if (this.y < 0) {
-            esquerra = dreta = amunt = abaix = false;
+            this.direction = -1;
             posthis = new Posicio(anterior.row, anterior.column);
         }
         if (this.x >= mapa.Columns) {
             posthis = new Posicio(anterior.row, anterior.column);
-            esquerra = dreta = amunt = abaix = false;
+            this.direction = -1;
         } else if (this.x < 0) {
-            esquerra = dreta = amunt = abaix = false;
+            this.direction = -1;
             posthis = new Posicio(anterior.row, anterior.column);
         }
         if (posthis !== undefined) 

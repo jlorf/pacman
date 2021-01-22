@@ -1,8 +1,13 @@
+const ROWSconst = 4;
+const COLUMNSconst  = 4;
+const SIZE_IMAGEconst  = 32;
+//const MAZEconst  = [];
+
 class Mapa {
-    ROWS = 4;
-    COLUMNS = 4;
-    SIZE_IMAGE = 32;
-    MAZE = [];
+    // ROWS = 4;
+    // COLUMNS = 4;
+    // SIZE_IMAGE = 32;
+    // MAZE = [];
 
     static CrearArray(x, y){
         var arrayBidimensional= new Array(x);

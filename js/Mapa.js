@@ -30,7 +30,11 @@ class Mapa {
     CrearArray(x, y) {
         var arrayBidimensional = new Array(x);
         for (var i = 0; i < x; i++) {
-            arrayBidimensional[i] = new Array(y);
+            // arrayBidimensional[i] = new Array(y);
+            arrayBidimensional[i] = [];
+            for (var i2 = 0; i2 < y; i2++) {
+                arrayBidimensional[i].push(1);
+            }
         }
         return arrayBidimensional;
     }
@@ -42,18 +46,22 @@ class Mapa {
             if (cells[j] !== null && cells[j] !== undefined) {
                 cells[j].forEach(c => {
                     if (c) {
-                        mapa[c.x][c.y] = 1;
+                        // mapa[c.x][c.y] = 1;
+                        // var splited = c.set.split("|");
+                        // mapa[splited[0]][splited[1]] = 1;
+                        // mapa[c.x][c.y] = 1;
+                        mapa[c.x][c.y] = 0;
                         if (c.connections.right) {
-                            mapa[c.x + 1][c.y] = 1;
+                            mapa[c.x + 1][c.y] = 0;
                         }
                         if (c.connections.down) {
-                            mapa[c.x][c.y + 1] = 1;
+                            mapa[c.x][c.y + 1] = 0;
                         }
                         if (c.connections.up) {
-                            mapa[c.x][c.y - 1] = 1;
+                            mapa[c.x][c.y - 1] = 0;
                         }
                         if (c.connections.left) {
-                            mapa[c.x - 1][c.y] = 1;
+                            mapa[c.x - 1][c.y] = 0;
                         }
                     }
                 });

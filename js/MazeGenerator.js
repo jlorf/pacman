@@ -136,6 +136,6 @@ function generateEllerMaze(array) {
             })
         }
     }
-
+    
     return cells;
 }

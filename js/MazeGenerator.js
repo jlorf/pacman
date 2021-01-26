@@ -6,14 +6,14 @@
 
 //-------------------------Maze methods----------------------------//
 //naive algorithm, not guaranteed solvable, O(n)
-function generateNaiveMaze() {
+function generateNaiveMaze(array, rows, columns) {
     let cells = [];
-    for (let y = 0; y < imageData.height; y++) {
+    for (let y = 0; y < rows; y++) {
         if (y%2 === 1) {
             continue;
         }
         cells[y] = [];
-        for (let x = 0; x < imageData.width; x++) {
+        for (let x = 0; x < columns; x++) {
             if (x%2 === 1) {
                 continue;
             }
@@ -21,28 +21,29 @@ function generateNaiveMaze() {
         }
     }
     //draw
-    function drawMaze1() {
-        cells.forEach(r => {
-            r.forEach(c => {
-                offScreenCTX.fillRect(c.x,c.y,1,1);
-            })
-        })
-        source = offScreenCVS.toDataURL();
-        renderImage();
-        window.setTimeout(drawMaze2, delaySlider.value)
-    }
-    function drawMaze2() {
-        cells.forEach(r => {
-            r.forEach(c => {
-                let rand = [[0,1],[0,-1],[1,0],[-1,0]];
-                let randC = rand[Math.floor(Math.random() * 4)];
-                offScreenCTX.fillRect(c.x+randC[0],c.y+randC[1],1,1);
-            })
-        })
-        source = offScreenCVS.toDataURL();
-        renderImage();
-    }
-    drawMaze1();
+    // function drawMaze1() {
+    //     cells.forEach(r => {
+    //         r.forEach(c => {
+    //             offScreenCTX.fillRect(c.x,c.y,1,1);
+    //         })
+    //     })
+    //     source = offScreenCVS.toDataURL();
+    //     renderImage();
+    //     window.setTimeout(drawMaze2, delaySlider.value)
+    // }
+    // function drawMaze2() {
+    //     cells.forEach(r => {
+    //         r.forEach(c => {
+    //             let rand = [[0,1],[0,-1],[1,0],[-1,0]];
+    //             let randC = rand[Math.floor(Math.random() * 4)];
+    //             offScreenCTX.fillRect(c.x+randC[0],c.y+randC[1],1,1);
+    //         })
+    //     })
+    //     source = offScreenCVS.toDataURL();
+    //     renderImage();
+    // }
+    // drawMaze1();
+    return cells;
 }
 // Eller's algorithm
 function generateEllerMaze(array) {

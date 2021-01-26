@@ -1,6 +1,6 @@
 const ROWSconst = 4;
-const COLUMNSconst  = 4;
-const SIZE_IMAGEconst  = 32;
+const COLUMNSconst = 4;
+const SIZE_IMAGEconst = 32;
 //const MAZEconst  = [];
 
 class Mapa {
@@ -9,31 +9,76 @@ class Mapa {
     // SIZE_IMAGE = 32;
     // MAZE = [];
 
-    static CrearArray(x, y){
-        var arrayBidimensional= new Array(x);
+    constructor(rows, columns, imagesize) {
+        if (arguments?.length === 0) {
+            this.ROWS = ROWSconst;
+            this.COLUMNS = COLUMNSconst;
+            this.SIZE_IMAGE = imagesize;
+        } else if (arguments?.length === 2) {
+            this.ROWS = rows;
+            this.COLUMNS = columns;
+            this.SIZE_IMAGE = SIZE_IMAGEconst;
+        } else if (arguments?.length === 3) {
+            this.ROWS = rows;
+            this.COLUMNS = columns;
+            this.SIZE_IMAGE = imagesize;
+        }
+        this.MAZE = this.CrearArray(this.ROWS, this.COLUMNS);
+        this.MAZE = this.OmplirMapa(this.MAZE);
+    }
+
+    CrearArray(x, y) {
+        var arrayBidimensional = new Array(x);
         for (var i = 0; i < x; i++) {
             arrayBidimensional[i] = new Array(y);
         }
         return arrayBidimensional;
     }
 
-    constructor(rows, columns, imagesize) {
-      this.ROWS = rows;
-      this.COLUMNS = columns;
-      this.SIZE_IMAGE = imagesize;
-      this.MAZE = Mapa.CrearArray(this.ROWS, this.COLUMNS);
+    OmplirMapa(mapa) {
+        let cells = generateEllerMaze(mapa);
+        let j = 1;
+        function OmplirArray() {
+            if (cells[j] !== null && cells[j] !== undefined) {
+                cells[j].forEach(c => {
+                    if (c) {
+                        mapa[c.x][c.y] = 1;
+                        if (c.connections.right) {
+                            mapa[c.x + 1][c.y] = 1;
+                        }
+                        if (c.connections.down) {
+                            mapa[c.x][c.y + 1] = 1;
+                        }
+                        if (c.connections.up) {
+                            mapa[c.x][c.y - 1] = 1;
+                        }
+                        if (c.connections.left) {
+                            mapa[c.x - 1][c.y] = 1;
+                        }
+                    }
+                });
+            }
+            j += 2;
+            if (j < cells.length) {
+                OmplirArray();
+            }
+        }
+        OmplirArray();
+        j = 0;
+        OmplirArray();
+        return mapa;
     }
 
-    get Rows(){
+    get Rows() {
         return this.ROWS;
     }
 
-    get Columns(){
+    get Columns() {
         return this.COLUMNS;
     }
 
-    get Maze(){
+    get Maze() {
         return this.MAZE;
     }
 
-  }
+}

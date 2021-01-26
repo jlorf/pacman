@@ -39,41 +39,83 @@ const s = p => {
 
   p.setup = function () {
     esquerra = dreta = amunt = abaix = false;
-    mapa = new Mapa(25, 25, 32);
+    mapa = new Mapa(25, 25);
     let height = mapa.Rows * mapa.SIZE_IMAGE;
     let width = mapa.Columns * mapa.SIZE_IMAGE;
 
     // pospacman = new Posicio(0, 0);
     pacman = new Pacman(0, 0);
 
-    let cells = generateEllerMaze(mapa.Maze);
+    // let cells = generateEllerMaze(mapa.Maze);
+    // let cells = generateNaiveMaze(mapa.Maze, mapa.ROWS, mapa.COLUMNS);
+
+    
+
+    // function DrawMazeNaive(){
+    //   cells.forEach(r => {
+    //     r.forEach(c => {
+    //         mapa.Maze[c.x][c.y] = 1;
+    //     });
+    //   });
+    // }
+
+    // DrawMazeNaive();
 
     //draw
-    let j = 1;
-    function recursiveDrawMaze() {
-      cells[j].forEach(c => {
-        if (c) {
-          mapa.Maze[c.x][c.y] = 1;
-          if (c.connections.right) {
-            mapa.Maze[c.x + 1][c.y] = 1;
-          }
-          if (c.connections.down) {
-            mapa.Maze[c.x][c.y + 1] = 1;
-          }
-          if (c.connections.up) {
-            mapa.Maze[c.x][c.y - 1] = 1;
-          }
-          if (c.connections.left) {
-            mapa.Maze[c.x - 1][c.y] = 1;
-          }
-        }
-      });
-      j += 2;
-      if (j < cells.length) {
-        recursiveDrawMaze();
-      }
-    }
-    recursiveDrawMaze();
+    // let j = 1;
+    // function recursiveDrawMaze() {
+    //   if (cells[j] !== null && cells[j] !== undefined){
+    //     cells[j].forEach(c => {
+    //       if (c) {
+    //         mapa.Maze[c.x][c.y] = 1;
+    //         if (c.connections.right) {
+    //           mapa.Maze[c.x + 1][c.y] = 1;
+    //         }
+    //         if (c.connections.down) {
+    //           mapa.Maze[c.x][c.y + 1] = 1;
+    //         }
+    //         if (c.connections.up) {
+    //           mapa.Maze[c.x][c.y - 1] = 1;
+    //         }
+    //         if (c.connections.left) {
+    //           mapa.Maze[c.x - 1][c.y] = 1;
+    //         }
+    //       }
+    //     });
+    //   }
+    //   j += 1;
+    //   if (j < cells.length) {
+    //     recursiveDrawMaze();
+    //   }
+    // }
+
+    // function DrawMaze() {
+    //   mapa.Maze.forEach(m => m.forEach(m2 => m2 = 1));
+    //   cells[j].forEach(c => {
+    //     if (c) {
+    //       // mapa.Maze[c.x][c.y] = 1;
+    //       if (c.connections.right) {
+    //         mapa.Maze[c.y][c.x + 1] = 0;
+    //       }
+    //       if (c.connections.down) {
+    //         mapa.Maze[c.y + 1][c.x] = 0;
+    //       }
+    //       if (c.connections.up) {
+    //         mapa.Maze[c.y - 1][c.x] = 0;
+    //       }
+    //       if (c.connections.left) {
+    //         mapa.Maze[c.y][c.x - 1] = 0;
+    //       }
+    //     }
+    //   });
+    //   j += 2;
+    //   if (j < cells.length) {
+    //     recursiveDrawMaze();
+    //   }
+    // }
+
+    // recursiveDrawMaze();
+    // DrawMaze();
 
     for (i = 0; i < mapa.Maze.length; i++) {
       for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
@@ -153,21 +195,21 @@ const s = p => {
     }
     mapa.Maze[pacman.y][pacman.x] = 4;
 
-    fantasmesobject.forEach(fantasma => {
-      try {
-        // var ftipus = mapa.Maze[fantasma.x][fantasma.y];
-        // if (ftipus == -1) ftipus = 2;
-        mapa.Maze[fantasma.x][fantasma.y] = -1;
-        var index = fantasmesobject.indexOf(fantasma);
-        var fantasma2 = fantasma.Moure(mapa);
-        if (fantasma2 !== null && fantasma2 != undefined) fantasmesobject[index] = fantasma2;
-        mapa.Maze[fantasma2.x][fantasma2.y] = fantasma.tipus;
-        // debugger;
-      }
-      catch (e) {
-        debugger;
-      }
-    });
+    // fantasmesobject.forEach(fantasma => {
+    //   try {
+    //     // var ftipus = mapa.Maze[fantasma.x][fantasma.y];
+    //     // if (ftipus == -1) ftipus = 2;
+    //     mapa.Maze[fantasma.x][fantasma.y] = -1;
+    //     var index = fantasmesobject.indexOf(fantasma);
+    //     var fantasma2 = fantasma.Moure(mapa);
+    //     if (fantasma2 !== null && fantasma2 != undefined) fantasmesobject[index] = fantasma2;
+    //     mapa.Maze[fantasma2.x][fantasma2.y] = fantasma.tipus;
+    //     // debugger;
+    //   }
+    //   catch (e) {
+    //     debugger;
+    //   }
+    // });
 
     for (i = 0; i < mapa.Maze.length; i++) {
       for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {

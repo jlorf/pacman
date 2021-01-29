@@ -39,7 +39,7 @@ const s = p => {
 
   p.setup = function () {
     esquerra = dreta = amunt = abaix = false;
-    mapa = new Mapa(25, 25);
+    mapa = new Mapa(25, 25, 32, p);
     let height = mapa.Rows * mapa.SIZE_IMAGE;
     let width = mapa.Columns * mapa.SIZE_IMAGE;
 

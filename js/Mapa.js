@@ -3,13 +3,22 @@ const COLUMNSconst = 4;
 const SIZE_IMAGEconst = 32;
 //const MAZEconst  = [];
 
+const Cell = Object.freeze({
+    'visited': -1,
+    'empty': 0,
+    'start': 1,
+    'obstacle': 2,
+    'end': 3,
+    'path': 4,
+});
+
 class Mapa {
     // ROWS = 4;
     // COLUMNS = 4;
     // SIZE_IMAGE = 32;
     // MAZE = [];
 
-    constructor(rows, columns, imagesize) {
+    constructor(rows, columns, imagesize, p5var) {
         if (arguments?.length === 0) {
             this.ROWS = ROWSconst;
             this.COLUMNS = COLUMNSconst;
@@ -22,21 +31,27 @@ class Mapa {
             this.ROWS = rows;
             this.COLUMNS = columns;
             this.SIZE_IMAGE = imagesize;
+        } else if (arguments?.length === 4) {
+            this.ROWS = rows;
+            this.COLUMNS = columns;
+            this.SIZE_IMAGE = imagesize;
+            this.p5 = p5var;
         }
-        this.MAZE = this.CrearArray(this.ROWS, this.COLUMNS);
-        this.MAZE = this.OmplirMapa(this.MAZE);
+        // this.CrearArray(this.ROWS, this.COLUMNS);
+        // this.MAZE = this.OmplirMapa(this.MAZE);
+        this.MAZE = this.generarMapa();
     }
 
     CrearArray(x, y) {
-        var arrayBidimensional = new Array(x);
+        this.MAZE = new Array(x);
         for (var i = 0; i < x; i++) {
             // arrayBidimensional[i] = new Array(y);
-            arrayBidimensional[i] = [];
+            this.MAZE[i] = [];
             for (var i2 = 0; i2 < y; i2++) {
-                arrayBidimensional[i].push(1);
+                this.MAZE[i].push(1);
             }
         }
-        return arrayBidimensional;
+        // return arrayBidimensional;
     }
 
     OmplirMapa(mapa) {
@@ -72,8 +87,8 @@ class Mapa {
             }
         }
         OmplirArray();
-        j = 0;
-        OmplirArray();
+        // j = 0;
+        // OmplirArray();
         return mapa;
     }
 
@@ -87,6 +102,103 @@ class Mapa {
 
     get Maze() {
         return this.MAZE;
+    }
+
+    boardInit() {
+        this.MAZE = new Array(this.ROWS);
+        for (let i = 0; i < this.ROWS; i++) {
+            this.MAZE[i] = new Array(this.COLUMNS + 1).fill(0);
+        }
+        return this.MAZE;
+    }
+
+    generarMapa() {
+        var board = this.boardInit();
+
+        // Make walls
+        for (let i = 0; i < this.ROWS; i += 2) {
+            for (let j = 0; j < this.COLUMNS; j++) {
+                board[i][j] = Cell.obstacle;
+            }
+        }
+
+        for (let i = 0; i < this.ROWS; i++) {
+            for (let j = 0; j < this.COLUMNS; j += 2) {
+                board[i][j] = Cell.obstacle;
+            }
+        }
+
+        // Choose start point
+        let sy = 1;
+        let sx = 1;
+
+        board[sy][sx] = Cell.visited;
+
+        let stack = [];
+        stack.push({ x: sx, y: sy });
+
+        while (stack.length > 0) {
+            let current = stack.pop();
+
+            let validNeighbors = [];
+            let straightMoves = [[0, -2], [0, 2], [-2, 0], [2, 0]];
+
+            for (let move of straightMoves) {
+                let newNodePosition = {
+                    x: current.x + move[0],
+                    y: current.y + move[1]
+                };
+
+                if (!this.isOnBoard(newNodePosition) || board[newNodePosition.y][newNodePosition.x] === Cell.visited) {
+                    continue;
+                }
+
+                validNeighbors.push(newNodePosition);
+            }
+
+            // If we have available neighbor(s), we choose a random neighbor
+            // and remove the wall(obstacle cell) between these two cell.
+            if (validNeighbors.length > 0) {
+                stack.push(current);
+                let randNeighbor = this.p5.random(validNeighbors);
+
+                if (randNeighbor.y === current.y) { // Same row
+                    if (randNeighbor.x > current.x) {
+                        board[current.y][current.x + 1] = Cell.empty;
+                    } else {
+                        board[current.y][current.x - 1] = Cell.empty;
+                    }
+                } else { // Same column
+                    if (randNeighbor.y > current.y) {
+                        board[current.y + 1][current.x] = Cell.empty;
+                    } else {
+                        board[current.y - 1][current.x] = Cell.empty;
+                    }
+                }
+
+                board[randNeighbor.y][randNeighbor.x] = Cell.visited;
+                stack.push(randNeighbor);
+            }
+        }
+
+        // Cells were marked as visited. Mark them as empty again.
+        for (let i = 0; i < this.ROWS; i++) {
+            for (let j = 0; j < this.COLUMNS; j++) {
+                if (board[i][j] === Cell.obstacle) {
+                    board[i][j] = 1;
+                } else if (board[i][j] === Cell.visited){
+                    board[i][j] = -1;
+                }
+            }
+        }
+        return board;
+    }
+
+    isOnBoard(nodePosition) {
+        return !(nodePosition.y > (this.ROWS - 1) ||
+            nodePosition.y < 0 ||
+            nodePosition.x > (this.COLUMNS - 1) ||
+            nodePosition.x < 0);
     }
 
 }

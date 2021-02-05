@@ -39,6 +39,8 @@ class Mapa {
         }
         // this.CrearArray(this.ROWS, this.COLUMNS);
         // this.MAZE = this.OmplirMapa(this.MAZE);
+        this.roques = [];
+        this.menjar = [];
         this.MAZE = this.generarMapa();
     }
 
@@ -107,7 +109,7 @@ class Mapa {
     boardInit() {
         this.MAZE = new Array(this.ROWS);
         for (let i = 0; i < this.ROWS; i++) {
-            this.MAZE[i] = new Array(this.COLUMNS + 1).fill(0);
+            this.MAZE[i] = new Array(this.COLUMNS).fill(0);
         }
         return this.MAZE;
     }
@@ -186,8 +188,14 @@ class Mapa {
             for (let j = 0; j < this.COLUMNS; j++) {
                 if (board[i][j] === Cell.obstacle) {
                     board[i][j] = 1;
+                    this.roques.push(new Roca(j, i));
                 } else if (board[i][j] === Cell.visited){
-                    board[i][j] = -1;
+                    let rnd = getRandomArbitrary(0, 1);
+                    if (rnd == 1) rnd = -1;
+                    if (rnd == 0) {                        
+                        this.menjar.push(new Menjar(j, i));
+                    }
+                    board[i][j] = rnd;
                 }
             }
         }

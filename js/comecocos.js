@@ -38,207 +38,65 @@ const s = p => {
   };
 
   p.setup = function () {
-    esquerra = dreta = amunt = abaix = false;
-    mapa = new Mapa(25, 25, 32, p);
-    let height = mapa.Rows * mapa.SIZE_IMAGE;
-    let width = mapa.Columns * mapa.SIZE_IMAGE;
-
-    // pospacman = new Posicio(0, 0);
-    pacman = new Pacman(0, 0);
-
-    // let cells = generateEllerMaze(mapa.Maze);
-    // let cells = generateNaiveMaze(mapa.Maze, mapa.ROWS, mapa.COLUMNS);
-
-    
-
-    // function DrawMazeNaive(){
-    //   cells.forEach(r => {
-    //     r.forEach(c => {
-    //         mapa.Maze[c.x][c.y] = 1;
-    //     });
-    //   });
-    // }
-
-    // DrawMazeNaive();
-
-    //draw
-    // let j = 1;
-    // function recursiveDrawMaze() {
-    //   if (cells[j] !== null && cells[j] !== undefined){
-    //     cells[j].forEach(c => {
-    //       if (c) {
-    //         mapa.Maze[c.x][c.y] = 1;
-    //         if (c.connections.right) {
-    //           mapa.Maze[c.x + 1][c.y] = 1;
-    //         }
-    //         if (c.connections.down) {
-    //           mapa.Maze[c.x][c.y + 1] = 1;
-    //         }
-    //         if (c.connections.up) {
-    //           mapa.Maze[c.x][c.y - 1] = 1;
-    //         }
-    //         if (c.connections.left) {
-    //           mapa.Maze[c.x - 1][c.y] = 1;
-    //         }
-    //       }
-    //     });
-    //   }
-    //   j += 1;
-    //   if (j < cells.length) {
-    //     recursiveDrawMaze();
-    //   }
-    // }
-
-    // function DrawMaze() {
-    //   mapa.Maze.forEach(m => m.forEach(m2 => m2 = 1));
-    //   cells[j].forEach(c => {
-    //     if (c) {
-    //       // mapa.Maze[c.x][c.y] = 1;
-    //       if (c.connections.right) {
-    //         mapa.Maze[c.y][c.x + 1] = 0;
-    //       }
-    //       if (c.connections.down) {
-    //         mapa.Maze[c.y + 1][c.x] = 0;
-    //       }
-    //       if (c.connections.up) {
-    //         mapa.Maze[c.y - 1][c.x] = 0;
-    //       }
-    //       if (c.connections.left) {
-    //         mapa.Maze[c.y][c.x - 1] = 0;
-    //       }
-    //     }
-    //   });
-    //   j += 2;
-    //   if (j < cells.length) {
-    //     recursiveDrawMaze();
-    //   }
-    // }
-
-    // recursiveDrawMaze();
-    // DrawMaze();
-
-    for (i = 0; i < mapa.Maze.length; i++) {
-      for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
-        if (mapa.Maze[i][i2] !== 1) mapa.Maze[i][i2] = -1;
-        else roquesobject.push(new Roca(i, i2));
-      }
-    }
-
-    posicioPacman();
-    mapa.Maze[pacman.y][pacman.x] = 4;
-
-    for (i = 0; i < mapa.Maze.length; i++) {
-      for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
-        if (mapa.Maze[i][i2] !== 1 && mapa.Maze[i][i2] !== 4) {
-          let rnd = getRandomArbitrary(0, 3);
-          if (rnd == 1) rnd = -1;
-          if (rnd == 2 || rnd == 3) {
-            fantasmes++;
-            if (fantasmes > maximfantasmes) {
-              rnd = -1;
-            } else {
-              var f = new Fantasma(i, i2, rnd);
-              fantasmesobject.push(f);
-            }
-          }
-          mapa.Maze[i][i2] = rnd;
-        }
-      }
-    }
-
-    p.createCanvas(height, width);
-    p.frameRate(10);
-    $("canvas").css("position", "absolute");
-    $("canvas").css("top", "50%");
-    $("canvas").css("left", "50%");
-    $("canvas").addClass("transform");
-
-    function posicioPacman() {
-      // pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
-      // pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
-      // if (mapa.Maze[pospacman.row][pospacman.column] != -1) posicioPacman();
-      pacman.y = getRandomArbitrary(0, mapa.Rows - 1);
-      pacman.x = getRandomArbitrary(0, mapa.Columns - 1);
-      if (mapa.Maze[pacman.y][pacman.x] != -1) posicioPacman();
-    }
+    IniciarJoc(p);
   };
 
   p.draw = function () {
     p.background(0);
-    // let anterior = new Posicio(pospacman.row, pospacman.column);
-    // pospacman.row = pospacman.row + (dreta ? 1 : esquerra ? -1 : 0);
-    // if (pospacman.row < 0) pospacman.row = 0;
-    // else if (pospacman.row > mapa.Rows - 1) pospacman.row = mapa.Rows - 1;
-    // if (pospacman.column < 0) pospacman.column = 0;
-    // else if (pospacman.column > mapa.Columns - 1)
-    //   pospacman.column = mapa.Columns - 1;
-    // pospacman.column = pospacman.column + (amunt ? -1 : abaix ? 1 : 0);
-    // try {
-    //   if (
-    //     anterior.row != pospacman.row ||
-    //     pospacman.column != anterior.column
-    //   ) {
-    //     if (!ComprovarParets(anterior)) {
-    //       mapa.Maze[anterior.row][anterior.column] = -1;
-    //       mapa.Maze[pospacman.row][pospacman.column] = 4;
-    //     }
-    //   }
-    // } catch { }
-    mapa.Maze[pacman.y][pacman.x] = -1;
+    // mapa.Maze[pacman.y][pacman.x] = -1;
+    
+    var pos_anterior = {
+      x: pacman.x, y: pacman.y
+    }
     pacman = pacman.Moure(mapa);
-    //comecocos = dreta ? comecocosdreta : esquerra ? comecocosesquerra : amunt ? comecocosamunt : abaix ? comecocosabaix : comecocosdreta;
+
     switch(pacman.direction){
       case 0: comecocos = comecocosdreta; break;
       case 1: comecocos = comecocosesquerra; break;
       case 2: comecocos = comecocosamunt; break;
       case 3: comecocos = comecocosabaix; break;
     }
-    mapa.Maze[pacman.y][pacman.x] = 4;
 
-    // fantasmesobject.forEach(fantasma => {
-    //   try {
-    //     // var ftipus = mapa.Maze[fantasma.x][fantasma.y];
-    //     // if (ftipus == -1) ftipus = 2;
-    //     mapa.Maze[fantasma.x][fantasma.y] = -1;
-    //     var index = fantasmesobject.indexOf(fantasma);
-    //     var fantasma2 = fantasma.Moure(mapa);
-    //     if (fantasma2 !== null && fantasma2 != undefined) fantasmesobject[index] = fantasma2;
-    //     mapa.Maze[fantasma2.x][fantasma2.y] = fantasma.tipus;
-    //     // debugger;
-    //   }
-    //   catch (e) {
-    //     debugger;
-    //   }
-    // });
-
-    for (i = 0; i < mapa.Maze.length; i++) {
-      for (i2 = 0; i2 < mapa.Maze[i].length; i2++) {
-        let img;
-        switch (mapa.Maze[i][i2]) {
-          case -1:
-            img = transparent;
-            break;
-          case 0:
-            img = bola;
-            break;
-          case 1:
-            img = paret;
-            break;
-          case 2:
-            img = fantasma1;
-            break;
-          case 3:
-            img = fantasma2;
-            break;
-          case 4:
-            img = comecocos;
-            break;
-        }
-        try {
-          if (img != null) p.image(img, i * mapa.SIZE_IMAGE, i2 * mapa.SIZE_IMAGE);
-        } catch { }
+    if (pos_anterior.x != pacman.x || pos_anterior.y != pacman.y){
+      var index_menjar = mapa.menjar.findIndex(m => m.x == pacman.x && m.y == pacman.y);
+      if (index_menjar > -1){
+        pacman.punts = pacman.punts + 1;        
+        var menjarobj = mapa.menjar.splice(index_menjar, 1);
+      }
+    } else {
+      if (pacman.paret){
+        pacman.vides = pacman.vides - 1;
+        pacman.paret = false;
       }
     }
+
+    mapa.Maze[pacman.y][pacman.x] = 4;
+
+    //mostrar parets
+    mapa.roques.forEach(element => {
+      element.Show(p, paret, mapa.SIZE_IMAGE);
+    });
+
+    //mostrar menjar
+    mapa.menjar.forEach(element => {
+      element.Show(p, bola, mapa.SIZE_IMAGE);
+    });
+
+    //mostrar pacman
+    pacman.Show(p, comecocos, mapa.SIZE_IMAGE);
+
+    var perdre = pacman.vides < 0;
+    var guanyar = !perdre && (mapa?.menjar == undefined || mapa?.menjar?.length == 0);
+
+    if (guanyar || perdre){
+      p.noLoop();
+      if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")){
+        IniciarJoc(p);
+        p.loop();
+      }
+    }
+    // debugger;
+
   };
 
   p.keyPressed = function () {
@@ -259,39 +117,36 @@ const s = p => {
   };
 };
 
+function IniciarJoc(p) {
+  mapa = new Mapa(25, 25, 32, p);
+  let height = mapa.Rows * mapa.SIZE_IMAGE;
+  let width = mapa.Columns * mapa.SIZE_IMAGE;
+
+  pacman = new Pacman(0, 0);
+
+  posicioPacman();
+  mapa.Maze[pacman.y][pacman.x] = 4;
+
+  p.createCanvas(height, width);
+  p.frameRate(10);
+  $("canvas").css("position", "absolute");
+  $("canvas").css("top", "50%");
+  $("canvas").css("left", "50%");
+  $("canvas").addClass("transform");
+}
+
+function posicioPacman() {
+  // pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
+  // pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
+  // if (mapa.Maze[pospacman.row][pospacman.column] != -1) posicioPacman();
+  pacman.y = getRandomArbitrary(0, mapa.Rows - 1);
+  pacman.x = getRandomArbitrary(0, mapa.Columns - 1);
+  if (mapa.Maze[pacman.y][pacman.x] != -1) posicioPacman();
+}
+
 function getRandomArbitrary(min, max) {
   return Math.round(Math.random() * (max - min) + min);
 }
-
-// function ComprovarParets(anterior) {
-//   let paret = mapa.Maze[pospacman.row][pospacman.column] == 1;
-//   if (paret) {
-//     pospacman = new Posicio(anterior.row, anterior.column);
-//     esquerra = dreta = amunt = abaix = false;
-//   }
-//   if (pospacman.row >= mapa.Rows) {
-//     pospacman = new Posicio(anterior.row, anterior.column);
-//     esquerra = dreta = amunt = abaix = false;
-//   } else if (pospacman.row < 0) {
-//     esquerra = dreta = amunt = abaix = false;
-//     pospacman = new Posicio(anterior.row, anterior.column);
-//   }
-//   if (pospacman.column >= mapa.Columns) {
-//     pospacman = new Posicio(anterior.row, anterior.column);
-//     esquerra = dreta = amunt = abaix = false;
-//   } else if (pospacman.column < 0) {
-//     esquerra = dreta = amunt = abaix = false;
-//     pospacman = new Posicio(anterior.row, anterior.column);
-//   }
-//   return paret;
-// }
-
-// class Posicio {
-//   constructor(row, column) {
-//     this.row = row;
-//     this.column = column;
-//   }
-// }
 
 $(document).ready(function () {
   canvasp5 = new p5(s, 'pacman')

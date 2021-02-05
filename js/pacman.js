@@ -2,6 +2,9 @@ class Pacman extends GameObject {
     direction = -1;
     constructor(x, y) {
         super(x, y);
+        this.paret = false;
+        this.vides = 50;
+        this.punts = 0;
     }
 
     Moure (mapa) {
@@ -34,9 +37,9 @@ class Pacman extends GameObject {
     };
 
     ComprovarParets (anterior, mapa) {
-        let paret = mapa.Maze[this.y][this.x] == 1;
+        this.paret = mapa.Maze[this.y][this.x] == 1;
         let posthis;
-        if (paret) {
+        if (this.paret) {
             posthis = new Posicio(anterior.row, anterior.column);
             this.direction = -1;
         }
@@ -59,7 +62,7 @@ class Pacman extends GameObject {
             this.x = posthis.column;
             this.y = posthis.row;
         }
-        return paret;
+        return this.paret;
     }
 
 }

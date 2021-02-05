@@ -23,6 +23,11 @@ let pospacman;
 
 let pacman;
 
+let beginning;
+let chomp;
+let death;
+let eatfruit;
+
 const s = p => {
   p.preload = function () {
     paret = p.loadImage("imatges/wall.png");
@@ -35,10 +40,16 @@ const s = p => {
     fantasma2 = p.loadImage("imatges/fantasma2.png");
     transparent = p.loadImage("imatges/transparent.png");
     comecocos = comecocosdreta;
+    beginning = p.loadSound('sons/pacman_beginning.wav');
+    chomp = p.loadSound('sons/pacman_chomp.wav');
+    death = p.loadSound('sons/pacman_death.wav');
+    eatfruit = p.loadSound('sons/pacman_eatfruit.wav');
   };
 
   p.setup = function () {
     IniciarJoc(p);
+    beginning.setVolume(0.5);
+    beginning.play();
   };
 
   p.draw = function () {
@@ -58,10 +69,14 @@ const s = p => {
     }
 
     if (pos_anterior.x != pacman.x || pos_anterior.y != pacman.y){
+      chomp.setVolume(0.5);
+      chomp.play();
       var index_menjar = mapa.menjar.findIndex(m => m.x == pacman.x && m.y == pacman.y);
       if (index_menjar > -1){
         pacman.punts = pacman.punts + 1;        
         var menjarobj = mapa.menjar.splice(index_menjar, 1);
+        eatfruit.setVolume(0.5);
+        eatfruit.play();
       }
     } else {
       if (pacman.paret){
@@ -90,6 +105,10 @@ const s = p => {
 
     if (guanyar || perdre){
       p.noLoop();
+      if (perdre) {
+        death.setVolume(0.5);
+        death.play();
+      }
       if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")){
         IniciarJoc(p);
         p.loop();

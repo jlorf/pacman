@@ -27,6 +27,29 @@ let beginning;
 let chomp;
 let death;
 let eatfruit;
+let time;
+
+const s2 = p2 => {
+  p2.setup = function () {
+    p2.createCanvas(p2.windowWidth - 10, p2.windowHeight - 10);
+    p2.fill(1000);
+    p2.textSize(15);
+    p2.textAlign(p2.CENTER, p2.CENTER);
+    // p.frameRate(10);
+  };
+
+  p2.draw = function () {
+    p2.background(0);
+    time = p2.millis() / 1000;
+    p2.text("Temps: " + parseInt(time), p2.width - 100, 10);
+    p2.text("Punts: " + pacman?.punts ?? 0, p2.width - 200, 10);
+    p2.text("Vides: " + pacman?.vides ?? 0, p2.width - 300, 10);
+  };
+
+  p2.windowResized = function() {
+    p2.resizeCanvas(p2.windowWidth - 10, p2.windowHeight - 10);
+  };
+}
 
 const s = p => {
   p.preload = function () {
@@ -55,31 +78,33 @@ const s = p => {
   p.draw = function () {
     p.background(0);
     // mapa.Maze[pacman.y][pacman.x] = -1;
-    
+
     var pos_anterior = {
       x: pacman.x, y: pacman.y
     }
     pacman = pacman.Moure(mapa);
 
-    switch(pacman.direction){
+    switch (pacman.direction) {
       case 0: comecocos = comecocosdreta; break;
       case 1: comecocos = comecocosesquerra; break;
       case 2: comecocos = comecocosamunt; break;
       case 3: comecocos = comecocosabaix; break;
     }
 
-    if (pos_anterior.x != pacman.x || pos_anterior.y != pacman.y){
-      chomp.setVolume(0.5);
-      chomp.play();
+    if (pos_anterior.x != pacman.x || pos_anterior.y != pacman.y) {
+      if (!chomp.isPlaying()) {
+        chomp.setVolume(0.5);
+        chomp.play();
+      }
       var index_menjar = mapa.menjar.findIndex(m => m.x == pacman.x && m.y == pacman.y);
-      if (index_menjar > -1){
-        pacman.punts = pacman.punts + 1;        
+      if (index_menjar > -1) {
+        pacman.punts = pacman.punts + 1;
         var menjarobj = mapa.menjar.splice(index_menjar, 1);
         eatfruit.setVolume(0.5);
         eatfruit.play();
       }
     } else {
-      if (pacman.paret){
+      if (pacman.paret) {
         pacman.vides = pacman.vides - 1;
         pacman.paret = false;
       }
@@ -103,13 +128,13 @@ const s = p => {
     var perdre = pacman.vides < 0;
     var guanyar = !perdre && (mapa?.menjar == undefined || mapa?.menjar?.length == 0);
 
-    if (guanyar || perdre){
+    if (guanyar || perdre) {
       p.noLoop();
       if (perdre) {
         death.setVolume(0.5);
         death.play();
       }
-      if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")){
+      if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")) {
         IniciarJoc(p);
         p.loop();
       }
@@ -168,5 +193,6 @@ function getRandomArbitrary(min, max) {
 }
 
 $(document).ready(function () {
-  canvasp5 = new p5(s, 'pacman')
+  canvasp5 = new p5(s, 'pacman');
+  var canvasp52 = new p5(s2, 'puntuacio');
 });

@@ -32,6 +32,76 @@ let time;
 
 let millisrestar = 0;
 
+const s3 = p3 => {
+  let MENU = 0
+  let imatgemenu;
+
+  p3.preload = function () {
+    imatgemenu = p3.loadImage('imatges/imatgemenu.jpg');
+  }
+
+  p3.setup = function () {
+    p3.createCanvas(p3.windowWidth - 10, p3.windowHeight - 10);
+  }
+
+  p3.draw = function () {
+    p3.background(0);
+    p3.fill(0, 255, 0);
+    p3.rect(50, 50, 200, 75);
+    p3.fill(255, 0, 255);
+    p3.rect(50, 200, 200, 75);
+    p3.textSize(50)
+    p3.fill(255);
+    p3.text('START', 70, 106);
+    p3.textSize(40);
+    p3.text('OPCIONS', 52, 248);
+    p3.image(imatgemenu, 250, 0, 550, 550);
+
+    if (MENU == 1) {
+      $("#menu").css("display", "none");
+      tempsrestar = canvasp52.millis();
+      $("#puntuacio").css("display", "block");
+      $("#pacman").css("display", "block");
+    }
+    if (p3.MENU == 2) {
+      p3.background(255, 0, 255)
+      p3.textSize(20)
+      p3.text('Right Click to return to MENU', 525, 30)
+      p3.textSize(30)
+      p3.text('1. Rocks will fall from the top of the screen.', 50, 150)
+      p3.text('2. Move your character using arrow keys', 50, 200)
+      p3.text('<- and -> to avoid being crushed.', 80, 240)
+      p3.text('3. The game is over when a rock hits you.', 50, 290)
+
+    }
+    if (MENU == 3) {
+      p3.background(255, 0, 0)
+      p3.textSize(75)
+      p3.text('COME AGAIN SOON!', 25, height / 2)
+    } // EXIT 
+  }
+
+  p3.mouseClicked = function () {
+    if (MENU == 0) {
+      if (p3.mouseX < 200 && p3.mouseX > 50) {
+        if (p3.mouseY < 125 && p3.mouseY > 50) {
+          MENU = 1
+        }
+        if (p3.mouseY < 275 && p3.mouseY > 200) {
+          MENU = 2
+        }
+        if (p3.mouseY < 425 && p3.mouseY > 350) {
+          MENU = 3
+        }
+      }
+    }
+  }
+
+  p3.windowResized = function () {
+    p3.resizeCanvas(p3.windowWidth - 10, p3.windowHeight - 10);
+  };
+}
+
 const s2 = p2 => {
   p2.setup = function () {
     p2.createCanvas(p2.windowWidth - 10, p2.windowHeight - 10);
@@ -50,7 +120,7 @@ const s2 = p2 => {
     p2.text("Vides: " + pacman?.vides ?? 0, p2.width - 300, 10);
   };
 
-  p2.windowResized = function() {
+  p2.windowResized = function () {
     p2.resizeCanvas(p2.windowWidth - 10, p2.windowHeight - 10);
   };
 }
@@ -200,4 +270,5 @@ function getRandomArbitrary(min, max) {
 $(document).ready(function () {
   canvasp5 = new p5(s, 'pacman');
   canvasp52 = new p5(s2, 'puntuacio');
+  new p5(s3, 'menu');
 });

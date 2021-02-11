@@ -1,5 +1,6 @@
 var mapa;
 var canvasp5;
+var canvasp52;
 let paret;
 let comecocos;
 let comecocosdreta;
@@ -29,6 +30,8 @@ let death;
 let eatfruit;
 let time;
 
+let millisrestar = 0;
+
 const s2 = p2 => {
   p2.setup = function () {
     p2.createCanvas(p2.windowWidth - 10, p2.windowHeight - 10);
@@ -40,7 +43,8 @@ const s2 = p2 => {
 
   p2.draw = function () {
     p2.background(0);
-    time = p2.millis() / 1000;
+    //reiniciar temps al finalitzar
+    time = (p2.millis() - millisrestar) / 1000;
     p2.text("Temps: " + parseInt(time), p2.width - 100, 10);
     p2.text("Punts: " + pacman?.punts ?? 0, p2.width - 200, 10);
     p2.text("Vides: " + pacman?.vides ?? 0, p2.width - 300, 10);
@@ -137,6 +141,7 @@ const s = p => {
       if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")) {
         IniciarJoc(p);
         p.loop();
+        millisrestar += canvasp52.millis();
       }
     }
     // debugger;
@@ -194,5 +199,5 @@ function getRandomArbitrary(min, max) {
 
 $(document).ready(function () {
   canvasp5 = new p5(s, 'pacman');
-  var canvasp52 = new p5(s2, 'puntuacio');
+  canvasp52 = new p5(s2, 'puntuacio');
 });

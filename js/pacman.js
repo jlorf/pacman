@@ -3,7 +3,7 @@ class Pacman extends GameObject {
     constructor(x, y) {
         super(x, y);
         this.paret = false;
-        this.vides = 100;
+        this.vides = 1;
         this.punts = 0;
     }
 

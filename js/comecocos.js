@@ -32,6 +32,9 @@ let time;
 
 let millisrestar = 0;
 
+let dificultat = 10;
+let nom;
+
 const s3 = p3 => {
   let MENU = 0
   let imatgemenu;
@@ -62,23 +65,12 @@ const s3 = p3 => {
       tempsrestar = canvasp52.millis();
       $("#puntuacio").css("display", "block");
       $("#pacman").css("display", "block");
+      IniciarJoc(canvasp5);
+      p3.noLoop();
+    } else if (MENU == 2) {
+      $("#opcions").modal();
+      MENU = 0;
     }
-    if (p3.MENU == 2) {
-      p3.background(255, 0, 255)
-      p3.textSize(20)
-      p3.text('Right Click to return to MENU', 525, 30)
-      p3.textSize(30)
-      p3.text('1. Rocks will fall from the top of the screen.', 50, 150)
-      p3.text('2. Move your character using arrow keys', 50, 200)
-      p3.text('<- and -> to avoid being crushed.', 80, 240)
-      p3.text('3. The game is over when a rock hits you.', 50, 290)
-
-    }
-    if (MENU == 3) {
-      p3.background(255, 0, 0)
-      p3.textSize(75)
-      p3.text('COME AGAIN SOON!', 25, height / 2)
-    } // EXIT 
   }
 
   p3.mouseClicked = function () {
@@ -86,12 +78,8 @@ const s3 = p3 => {
       if (p3.mouseX < 200 && p3.mouseX > 50) {
         if (p3.mouseY < 125 && p3.mouseY > 50) {
           MENU = 1
-        }
-        if (p3.mouseY < 275 && p3.mouseY > 200) {
+        } else if (p3.mouseY < 275 && p3.mouseY > 200) {
           MENU = 2
-        }
-        if (p3.mouseY < 425 && p3.mouseY > 350) {
-          MENU = 3
         }
       }
     }
@@ -212,6 +200,8 @@ const s = p => {
         IniciarJoc(p);
         p.loop();
         millisrestar += canvasp52.millis();
+      } else {
+        location.reload();
       }
     }
     // debugger;
@@ -237,7 +227,16 @@ const s = p => {
 };
 
 function IniciarJoc(p) {
-  mapa = new Mapa(25, 25, 32, p);
+
+  var alcada = 25;
+  var amplada = 25;
+
+  if ($("#pacman").css('display') == 'block') {
+    alcada = parseInt(prompt("Alçada mapa", "25")) || 25;
+    amplada = parseInt(prompt("Amplada mapa", "25")) || 25;
+  }
+
+  mapa = new Mapa(amplada, alcada, 32, p);
   let height = mapa.Rows * mapa.SIZE_IMAGE;
   let width = mapa.Columns * mapa.SIZE_IMAGE;
 
@@ -247,7 +246,7 @@ function IniciarJoc(p) {
   mapa.Maze[pacman.y][pacman.x] = 4;
 
   p.createCanvas(height, width);
-  p.frameRate(10);
+  p.frameRate(dificultat);
   $("canvas").css("position", "absolute");
   $("canvas").css("top", "50%");
   $("canvas").css("left", "50%");
@@ -265,6 +264,15 @@ function posicioPacman() {
 
 function getRandomArbitrary(min, max) {
   return Math.round(Math.random() * (max - min) + min);
+}
+
+function acceptar() {
+  nom = $("#nomjugador")[0].value;
+  var df = $("#dificultat")[0].value;
+  if (nom && df) {
+    dificultat = parseInt(df);
+    $("#opcions").modal('hide');
+  }
 }
 
 $(document).ready(function () {

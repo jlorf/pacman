@@ -8,6 +8,8 @@ let comecocosesquerra;
 let comecocosamunt;
 let comecocosabaix;
 let bola;
+let grapes;
+let grapes2;
 let fantasma1;
 let fantasma2;
 let transparent;
@@ -47,6 +49,7 @@ const s3 = p3 => {
 
   p3.setup = function () {
     p3.createCanvas(p3.windowWidth - 10, p3.windowHeight - 10);
+    // p3.frameRate(dificultat || 10);
   }
 
   p3.draw = function () {
@@ -113,7 +116,7 @@ const s3 = p3 => {
   }
 
   p3.windowResized = function () {
-    p3.resizeCanvas(p3.windowWidth - 10, p3.windowHeight - 10);
+    if (p3.isLooping()) p3.resizeCanvas(p3.windowWidth - 10, p3.windowHeight - 10);
   };
 }
 
@@ -123,7 +126,7 @@ const s2 = p2 => {
     p2.fill(1000);
     p2.textSize(15);
     p2.textAlign(p2.CENTER, p2.CENTER);
-    // p.frameRate(10);
+    // p2.frameRate(dificultat || 10);
   };
 
   p2.draw = function () {
@@ -148,6 +151,8 @@ const s = p => {
     comecocosamunt = p.loadImage("imatges/pacmanamunt.gif");
     comecocosabaix = p.loadImage("imatges/pacmanabaix.gif");
     bola = p.loadImage("imatges/bola.png");
+    grapes = p.loadImage("imatges/grapes.png");
+    grapes2 = p.loadImage("imatges/grapes2.png");
     fantasma1 = p.loadImage("imatges/fantasma.png");
     fantasma2 = p.loadImage("imatges/fantasma2.png");
     transparent = p.loadImage("imatges/transparent.png");
@@ -165,6 +170,7 @@ const s = p => {
   };
 
   p.draw = function () {
+    canvasp5.frameRate(parseInt(dificultat) || 5);
     p.background(0);
     // mapa.Maze[pacman.y][pacman.x] = -1;
 
@@ -187,7 +193,8 @@ const s = p => {
       }
       var index_menjar = mapa.menjar.findIndex(m => m.x == pacman.x && m.y == pacman.y);
       if (index_menjar > -1) {
-        pacman.punts = pacman.punts + 1;
+        var punstsumar = ObtenirPuntsTipusMenjar(index_menjar);
+        pacman.punts = pacman.punts + (punstsumar || 1);
         var menjarobj = mapa.menjar.splice(index_menjar, 1);
         eatfruit.setVolume(0.5);
         eatfruit.play();
@@ -208,7 +215,22 @@ const s = p => {
 
     //mostrar menjar
     mapa.menjar.forEach(element => {
-      element.Show(p, bola, mapa.SIZE_IMAGE);
+      var imatgecarregar = null;
+      switch (element.tipus) {
+        case 0:
+          imatgecarregar = bola;
+          break;
+        case 1:
+          imatgecarregar = grapes2;
+          break;
+        case 2:
+          imatgecarregar = grapes;
+          break;
+        default:
+          imatgecarregar = bola;
+          break;
+      }
+      element.Show(p, imatgecarregar, mapa.SIZE_IMAGE);
     });
 
     //mostrar pacman
@@ -273,7 +295,7 @@ function IniciarJoc(p) {
   mapa.Maze[pacman.y][pacman.x] = 4;
 
   p.createCanvas(height, width);
-  p.frameRate(dificultat);
+  // p.frameRate(dificultat);
   $("canvas").css("position", "absolute");
   $("canvas").css("top", "50%");
   $("canvas").css("left", "50%");
@@ -316,6 +338,25 @@ function acceptar() {
     storage.setItem('dificultat', dificultat);
     $("#opcions").modal('hide');
   }
+}
+
+function ObtenirPuntsTipusMenjar(index_menjar) {
+  var punts = 0;
+  switch (mapa?.menjar[index_menjar]?.tipus) {
+    case 0:
+      punts = 1;
+      break;
+    case 1:
+      punts = 5;
+      break;
+    case 2:
+      punts = 10;
+      break;
+    default:
+      punts = 0;
+      break;
+  }
+  return punts;
 }
 
 $(document).ready(function () {

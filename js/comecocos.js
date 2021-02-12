@@ -55,14 +55,20 @@ const s3 = p3 => {
     p3.rect(50, 50, 200, 75);
     p3.fill(255, 0, 255);
     p3.rect(50, 200, 200, 75);
-    p3.textSize(50)
+    p3.textSize(50);
     p3.fill(255);
     p3.text('START', 70, 106);
     p3.textSize(40);
     p3.text('OPCIONS', 52, 248);
+    p3.fill(130);
+    p3.rect(50, 350, 200, 75);
+    p3.textSize(50);
+    p3.fill(255);
+    p3.textSize(18)
+    p3.text('CARACTERISTIQUES', 60, 395);
     p3.image(imatgemenu, 250, 0, 550, 550);
 
-    if(!($("#opcions").data('bs.modal') || {})._isShown && MENU == -1){
+    if (!($("#opcions").data('bs.modal') || {})._isShown && MENU == -1) {
       MENU = 1;
     }
 
@@ -87,6 +93,8 @@ const s3 = p3 => {
       $("#nomjugador")[0].value = nom;
       $("#dificultat")[0].value = dificultat;
       MENU = 0;
+    } else if (MENU == 3) {
+      window.location.href = window.location.href.replace("comecocos.html", "index.html");
     }
   }
 
@@ -97,6 +105,8 @@ const s3 = p3 => {
           MENU = 1
         } else if (p3.mouseY < 275 && p3.mouseY > 200) {
           MENU = 2
+        } else if (p3.mouseY < 425 && p3.mouseY > 350) {
+          MENU = 3;
         }
       }
     }

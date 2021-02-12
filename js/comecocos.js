@@ -35,6 +35,8 @@ let millisrestar = 0;
 let dificultat = 10;
 let nom;
 
+let storage;
+
 const s3 = p3 => {
   let MENU = 0
   let imatgemenu;
@@ -60,15 +62,30 @@ const s3 = p3 => {
     p3.text('OPCIONS', 52, 248);
     p3.image(imatgemenu, 250, 0, 550, 550);
 
+    if(!($("#opcions").data('bs.modal') || {})._isShown && MENU == -1){
+      MENU = 1;
+    }
+
     if (MENU == 1) {
-      $("#menu").css("display", "none");
-      tempsrestar = canvasp52.millis();
-      $("#puntuacio").css("display", "block");
-      $("#pacman").css("display", "block");
-      IniciarJoc(canvasp5);
-      p3.noLoop();
+      if (nom && dificultat) {
+        $("#menu").css("display", "none");
+        tempsrestar = canvasp52.millis();
+        $("#puntuacio").css("display", "block");
+        $("#pacman").css("display", "block");
+        IniciarJoc(canvasp5);
+        p3.noLoop();
+      } else {
+        $("#opcions").modal();
+        $("#nomjugador")[0].value = nom;
+        $("#dificultat")[0].value = dificultat;
+        MENU = -1;
+      }
     } else if (MENU == 2) {
       $("#opcions").modal();
+      nom = storage.getItem("nomjugador");
+      dificultat = storage.getItem("dificultat");
+      $("#nomjugador")[0].value = nom;
+      $("#dificultat")[0].value = dificultat;
       MENU = 0;
     }
   }
@@ -232,8 +249,8 @@ function IniciarJoc(p) {
   var amplada = 25;
 
   if ($("#pacman").css('display') == 'block') {
-    alcada = parseInt(prompt("Alçada mapa", "25")) || 25;
-    amplada = parseInt(prompt("Amplada mapa", "25")) || 25;
+    alcada = parseInt(ObtenirAlcada()) || 25;
+    amplada = parseInt(ObtenirAmplada()) || 25;
   }
 
   mapa = new Mapa(amplada, alcada, 32, p);
@@ -251,6 +268,20 @@ function IniciarJoc(p) {
   $("canvas").css("top", "50%");
   $("canvas").css("left", "50%");
   $("canvas").addClass("transform");
+
+  function ObtenirAlcada(s) {
+    var missatge = "Alçada mapa";
+    if (s && s != undefined && s != null) missatge += " Màxim " + s;
+    var val = parseInt(prompt(missatge, "25")) || 25;
+    return (val * mapa.SIZE_IMAGE > p.windowHeight - 100) ? ObtenirAlcada((p.windowHeight - 100) / mapa.SIZE_IMAGE) : val;
+  }
+
+  function ObtenirAmplada(s) {
+    var missatge = "Amplada mapa";
+    if (s && s != undefined && s != null) missatge += " Màxim " + s;
+    var val = parseInt(prompt(missatge, "25")) || 25;
+    return (val * mapa.SIZE_IMAGE > p.windowWidth) ? ObtenirAmplada(Math.floor(p.windowWidth / mapa.SIZE_IMAGE)) : val;
+  }
 }
 
 function posicioPacman() {
@@ -271,6 +302,8 @@ function acceptar() {
   var df = $("#dificultat")[0].value;
   if (nom && df) {
     dificultat = parseInt(df);
+    storage.setItem('nomjugador', nom);
+    storage.setItem('dificultat', dificultat);
     $("#opcions").modal('hide');
   }
 }
@@ -279,4 +312,7 @@ $(document).ready(function () {
   canvasp5 = new p5(s, 'pacman');
   canvasp52 = new p5(s2, 'puntuacio');
   new p5(s3, 'menu');
+  storage = window.localStorage;
+  nom = storage.getItem("nomjugador");
+  dificultat = storage.getItem("dificultat");
 });

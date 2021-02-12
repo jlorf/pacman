@@ -136,6 +136,7 @@ const s2 = p2 => {
     p2.text("Temps: " + parseInt(time), p2.width - 100, 10);
     p2.text("Punts: " + pacman?.punts ?? 0, p2.width - 200, 10);
     p2.text("Vides: " + pacman?.vides ?? 0, p2.width - 300, 10);
+    p2.text("Nom: " + nom, 50, 10);
   };
 
   p2.windowResized = function () {

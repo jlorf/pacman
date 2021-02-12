@@ -69,6 +69,12 @@ const s3 = p3 => {
     p3.fill(255);
     p3.textSize(18)
     p3.text('CARACTERISTIQUES', 60, 395);
+    p3.fill(130);
+    p3.rect(50, 500, 200, 75);
+    p3.textSize(50);
+    p3.fill(255);
+    p3.textSize(18)
+    p3.text('PUNTUACIONS', 80, 545);
     p3.image(imatgemenu, 250, 0, 550, 550);
 
     if (!($("#opcions").data('bs.modal') || {})._isShown && MENU == -1) {
@@ -98,6 +104,8 @@ const s3 = p3 => {
       MENU = 0;
     } else if (MENU == 3) {
       window.location.href = window.location.href.replace("comecocos.html", "index.html");
+    } else if (MENU == 4) {
+      window.location.href = window.location.href.replace("comecocos.html", "puntuacions.html");
     }
   }
 
@@ -110,6 +118,8 @@ const s3 = p3 => {
           MENU = 2
         } else if (p3.mouseY < 425 && p3.mouseY > 350) {
           MENU = 3;
+        } else if (p3.mouseY < 575 && p3.mouseY > 500) {
+          MENU = 4;
         }
       }
     }
@@ -244,6 +254,13 @@ const s = p => {
         death.setVolume(0.5);
         death.play();
       }
+
+      if (guanyar){
+        var puntuacions = JSON.parse(window.localStorage.getItem("puntuacions")) || [];
+        puntuacions.push({Nom: nom, Punts: pacman.punts});
+        storage.setItem("puntuacions", JSON.stringify(puntuacions));
+      }
+
       if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")) {
         IniciarJoc(p);
         p.loop();

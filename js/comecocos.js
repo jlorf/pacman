@@ -257,7 +257,7 @@ const s = p => {
 
       if (guanyar){
         var puntuacions = JSON.parse(window.localStorage.getItem("puntuacions")) || [];
-        puntuacions.push({Nom: nom, Punts: pacman.punts});
+        puntuacions.push({Nom: nom, Punts: pacman.punts, Dificultat: dificultat});
         storage.setItem("puntuacions", JSON.stringify(puntuacions));
       }
 

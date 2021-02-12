@@ -165,8 +165,6 @@ const s = p => {
 
   p.setup = function () {
     IniciarJoc(p);
-    beginning.setVolume(0.5);
-    beginning.play();
   };
 
   p.draw = function () {
@@ -276,6 +274,11 @@ const s = p => {
 };
 
 function IniciarJoc(p) {
+
+  if ($("#pacman").css('display') == 'block') {
+    beginning.setVolume(0.5);
+    beginning.play();
+  }
 
   var alcada = 25;
   var amplada = 25;

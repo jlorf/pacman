@@ -257,7 +257,12 @@ const s = p => {
 
       if (guanyar){
         var puntuacions = JSON.parse(window.localStorage.getItem("puntuacions")) || [];
-        puntuacions.push({Nom: nom, Punts: pacman.punts, Dificultat: dificultat});
+        var pusuari = puntuacions.find(p => p.Nom == nom && parseInt(p.Dificultat) == parseInt(dificultat));
+        if (pusuari){
+          if (pusuari.Punts < pacman.punts){
+            pusuari.Punts = pacman.punts;
+          }
+        } else puntuacions.push({Nom: nom, Punts: pacman.punts, Dificultat: parseInt(dificultat)});
         storage.setItem("puntuacions", JSON.stringify(puntuacions));
       }
 

@@ -212,6 +212,10 @@ const s = p => {
       if (pacman.paret) {
         pacman.vides = pacman.vides - 1;
         pacman.paret = false;
+        $('#alerta').show();
+        window.setTimeout(function() {
+          $('#alerta').hide();
+      }, 2000);
       }
     }
 
@@ -386,6 +390,7 @@ function ObtenirPuntsTipusMenjar(index_menjar) {
 }
 
 $(document).ready(function () {
+  $('#alerta').hide();
   canvasp5 = new p5(s, 'pacman');
   canvasp52 = new p5(s2, 'puntuacio');
   new p5(s3, 'menu');

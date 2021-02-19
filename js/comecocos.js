@@ -136,6 +136,7 @@ const s2 = p2 => {
     p2.fill(1000);
     p2.textSize(15);
     p2.textAlign(p2.CENTER, p2.CENTER);
+    p2.noLoop();
     // p2.frameRate(dificultat || 10);
   };
 
@@ -176,9 +177,11 @@ const s = p => {
 
   p.setup = function () {
     IniciarJoc(p);
+    p.noLoop();
   };
 
   p.draw = function () {
+    if (p.isLooping()){
     canvasp5.frameRate(parseInt(dificultat) || 5);
     p.background(0);
     // mapa.Maze[pacman.y][pacman.x] = -1;
@@ -212,10 +215,21 @@ const s = p => {
       if (pacman.paret) {
         pacman.vides = pacman.vides - 1;
         pacman.paret = false;
-        $('#alerta').show();
+
+        var dialog = bootbox.dialog({
+          message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i><strong>Compte!</strong> Has perdut una vida!</p>',
+          centerVertical: true,
+          closeButton: false
+        });
+        
         window.setTimeout(function() {
-          $('#alerta').hide();
-      }, 2000);
+          dialog.modal('hide');
+        }, 1000);
+
+      //   $('#alerta').show();
+      //   window.setTimeout(function() {
+      //     $('#alerta').hide();
+      // }, 2000);
       }
     }
 
@@ -254,6 +268,7 @@ const s = p => {
 
     if (guanyar || perdre) {
       p.noLoop();
+      canvasp52.noLoop();
       if (perdre) {
         death.setVolume(0.5);
         death.play();
@@ -270,16 +285,40 @@ const s = p => {
         storage.setItem("puntuacions", JSON.stringify(puntuacions));
       }
 
-      if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")) {
-        IniciarJoc(p);
-        p.loop();
-        millisrestar += canvasp52.millis();
-      } else {
-        location.reload();
-      }
+
+      bootbox.confirm({
+        message: (guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?",
+        centerVertical: true,
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+          if (result) {
+            IniciarJoc(p);
+            millisrestar += canvasp52.millis();
+          } else {
+            location.reload();
+          }
+        }
+    });
+
+      // if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")) {
+      //   IniciarJoc(p);
+      //   p.loop();
+      //   millisrestar += canvasp52.millis();
+      // } else {
+      //   location.reload();
+      // }
     }
     // debugger;
-
+  }
   };
 
   p.keyPressed = function () {
@@ -302,7 +341,7 @@ const s = p => {
 
 function IniciarJoc(p) {
 
-  if ($("#pacman").css('display') == 'block') {
+  if ($("#pacman").css('display') == 'block' && p.isLooping()) {
     beginning.setVolume(0.5);
     beginning.play();
   }
@@ -310,26 +349,75 @@ function IniciarJoc(p) {
   var alcada = 25;
   var amplada = 25;
 
-  if ($("#pacman").css('display') == 'block') {
-    alcada = parseInt(ObtenirAlcada()) || 25;
-    amplada = parseInt(ObtenirAmplada()) || 25;
+  if ($("#pacman").css('display') == 'block' && !p.isLooping()) {
+    // alcada = parseInt(ObtenirAlcada()) || 25;
+    // amplada = parseInt(ObtenirAmplada()) || 25;
+    bootbox.prompt({
+      title: "Alçada mapa",
+      inputType: 'number',
+      centerVertical: true,
+      callback: function (result) {
+          if (result){
+            alcada = parseInt(result);
+            if (alcada > parseInt((p.windowHeight - 100) / 32)){
+              alcada = parseInt((p.windowHeight - 100) / 32);                    
+            }
+          }
+          else {
+            alcada = parseInt((p.windowHeight - 100) / 32);
+          }
+          bootbox.prompt({
+            title: "Amplada mapa",
+            inputType: 'number',
+            centerVertical: true,
+            callback: function (result2) {
+                if (result2){
+                  amplada = parseInt(result2);
+                  if (amplada > parseInt((p.windowWidth - 100) / 32)){
+                    amplada = parseInt((p.windowWidth - 100) / 32);                    
+                  }
+                }
+                else{
+                  amplada = parseInt((p.windowWidth - 100) / 32);
+                }
+                mapa = new Mapa(amplada, alcada, 32, p);
+                let height = mapa.Rows * mapa.SIZE_IMAGE;
+                let width = mapa.Columns * mapa.SIZE_IMAGE;
+
+                pacman = new Pacman(0, 0);
+
+                posicioPacman();
+                mapa.Maze[pacman.y][pacman.x] = 4;
+
+                p.createCanvas(height, width);
+                // p.frameRate(dificultat);
+                $("canvas").css("position", "absolute");
+                $("canvas").css("top", "50%");
+                $("canvas").css("left", "50%");
+                $("canvas").addClass("transform");
+                p.loop();
+                canvasp52.loop();
+            }
+          });
+      }
+    });
   }
 
-  mapa = new Mapa(amplada, alcada, 32, p);
-  let height = mapa.Rows * mapa.SIZE_IMAGE;
-  let width = mapa.Columns * mapa.SIZE_IMAGE;
+  // mapa = new Mapa(amplada, alcada, 32, p);
+  // let height = mapa.Rows * mapa.SIZE_IMAGE;
+  // let width = mapa.Columns * mapa.SIZE_IMAGE;
 
-  pacman = new Pacman(0, 0);
+  // pacman = new Pacman(0, 0);
 
-  posicioPacman();
-  mapa.Maze[pacman.y][pacman.x] = 4;
+  // posicioPacman();
+  // mapa.Maze[pacman.y][pacman.x] = 4;
 
-  p.createCanvas(height, width);
-  // p.frameRate(dificultat);
-  $("canvas").css("position", "absolute");
-  $("canvas").css("top", "50%");
-  $("canvas").css("left", "50%");
-  $("canvas").addClass("transform");
+  // p.createCanvas(height, width);
+  // // p.frameRate(dificultat);
+  // $("canvas").css("position", "absolute");
+  // $("canvas").css("top", "50%");
+  // $("canvas").css("left", "50%");
+  // $("canvas").addClass("transform");
 
   function ObtenirAlcada(s) {
     var missatge = "Alçada mapa";
@@ -393,6 +481,8 @@ $(document).ready(function () {
   $('#alerta').hide();
   canvasp5 = new p5(s, 'pacman');
   canvasp52 = new p5(s2, 'puntuacio');
+  canvasp5.noLoop();
+  canvasp52.noLoop();
   new p5(s3, 'menu');
   storage = window.localStorage;
   nom = storage.getItem("nomjugador");

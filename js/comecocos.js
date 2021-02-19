@@ -39,6 +39,8 @@ let nom;
 
 let storage;
 
+let timeout;
+
 const s3 = p3 => {
   let MENU = 0
   let imatgemenu;
@@ -292,6 +294,7 @@ const s = p => {
 
       if (guanyar || perdre) {
         p.noLoop();
+        window.clearTimeout(timeout);
         canvasp52.noLoop();
         if (perdre) {
           death.setVolume(0.5);
@@ -326,7 +329,7 @@ const s = p => {
           callback: function (result) {
             if (result) {
               IniciarJoc(p);
-              millisrestar += canvasp52.millis();
+              millisrestar += canvasp52.millis();              
             } else {
               location.reload();
             }
@@ -385,6 +388,8 @@ function IniciarJoc(p) {
           alcada = parseInt(result);
           if (alcada > parseInt((p.windowHeight - 100) / 32)) {
             alcada = parseInt((p.windowHeight - 100) / 32);
+          } else if (alcada < 5) {
+            alcada = parseInt((p.windowHeight - 100) / 32);
           }
         }
         else {
@@ -398,6 +403,8 @@ function IniciarJoc(p) {
             if (result2) {
               amplada = parseInt(result2);
               if (amplada > parseInt((p.windowWidth - 100) / 32)) {
+                amplada = parseInt((p.windowWidth - 100) / 32);
+              } else if (amplada < 5) {
                 amplada = parseInt((p.windowWidth - 100) / 32);
               }
             }
@@ -421,6 +428,9 @@ function IniciarJoc(p) {
             $("canvas").addClass("transform");
             p.loop();
             canvasp52.loop();
+            timeout = window.setTimeout(function () {
+              pacman.vides = -1;
+            }, ((((mapa.COLUMNS * mapa.ROWS) - mapa.roques.length) / parseInt(dificultat)) * (parseInt(dificultat) == 5 ? 4 : parseInt(dificultat) == 10 ? 2 : 1.5)) * 1000 + 10000);
           }
         });
       }

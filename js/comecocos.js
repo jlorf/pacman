@@ -224,7 +224,7 @@ const s = p => {
         
         window.setTimeout(function() {
           dialog.modal('hide');
-        }, 1000);
+        }, 500);
 
       //   $('#alerta').show();
       //   window.setTimeout(function() {

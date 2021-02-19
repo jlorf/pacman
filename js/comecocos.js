@@ -75,6 +75,11 @@ const s3 = p3 => {
     p3.fill(255);
     p3.textSize(18)
     p3.text('PUNTUACIONS', 80, 545);
+    p3.fill(130);
+    p3.rect(50, 650, 200, 75);
+    p3.fill(255);
+    p3.textSize(18)
+    p3.text('INSTRUCCIONS', 80, 695);
     p3.image(imatgemenu, 250, 0, 550, 550);
 
     if (!($("#opcions").data('bs.modal') || {})._isShown && MENU == -1) {
@@ -106,6 +111,23 @@ const s3 = p3 => {
       window.location.href = window.location.href.replace("comecocos.html", "index.html");
     } else if (MENU == 4) {
       window.location.href = window.location.href.replace("comecocos.html", "puntuacions.html");
+    } else if (MENU == 5) {
+      MENU = 0;
+      bootbox.dialog({
+        title: 'Instruccions Pacman',
+        centerVertical: true,
+        message: '<div class="container-fluid">	<div class="row">		<div class="col-md-12">			<h3 class="text-warning">Tecles per moures.</h3>			<p>&larr; &uarr; &rarr; &darr;</p><p>Al xocar contra una paret es resta una vida.</p>		</div>	</div></div>',
+        size: 'large',
+        buttons: {
+          ok: {
+            label: "OK!",
+            className: 'btn-info',
+            callback: function () {
+              console.log('Custom OK clicked');
+            }
+          }
+        }
+      });
     }
   }
 
@@ -120,6 +142,8 @@ const s3 = p3 => {
           MENU = 3;
         } else if (p3.mouseY < 575 && p3.mouseY > 500) {
           MENU = 4;
+        } else if (p3.mouseY < 725 && p3.mouseY > 650) {
+          MENU = 5;
         }
       }
     }
@@ -181,144 +205,144 @@ const s = p => {
   };
 
   p.draw = function () {
-    if (p.isLooping()){
-    canvasp5.frameRate(parseInt(dificultat) || 5);
-    p.background(0);
-    // mapa.Maze[pacman.y][pacman.x] = -1;
+    if (p.isLooping()) {
+      canvasp5.frameRate(parseInt(dificultat) || 5);
+      p.background(0);
+      // mapa.Maze[pacman.y][pacman.x] = -1;
 
-    var pos_anterior = {
-      x: pacman.x, y: pacman.y
-    }
-    pacman = pacman.Moure(mapa);
-
-    switch (pacman.direction) {
-      case 0: comecocos = comecocosdreta; break;
-      case 1: comecocos = comecocosesquerra; break;
-      case 2: comecocos = comecocosamunt; break;
-      case 3: comecocos = comecocosabaix; break;
-    }
-
-    if (pos_anterior.x != pacman.x || pos_anterior.y != pacman.y) {
-      if (!chomp.isPlaying()) {
-        chomp.setVolume(0.5);
-        chomp.play();
+      var pos_anterior = {
+        x: pacman.x, y: pacman.y
       }
-      var index_menjar = mapa.menjar.findIndex(m => m.x == pacman.x && m.y == pacman.y);
-      if (index_menjar > -1) {
-        var punstsumar = ObtenirPuntsTipusMenjar(index_menjar);
-        pacman.punts = pacman.punts + (punstsumar || 1);
-        var menjarobj = mapa.menjar.splice(index_menjar, 1);
-        eatfruit.setVolume(0.5);
-        eatfruit.play();
-      }
-    } else {
-      if (pacman.paret) {
-        pacman.vides = pacman.vides - 1;
-        pacman.paret = false;
+      pacman = pacman.Moure(mapa);
 
-        var dialog = bootbox.dialog({
-          message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i><strong>Compte!</strong> Has perdut una vida!</p>',
+      switch (pacman.direction) {
+        case 0: comecocos = comecocosdreta; break;
+        case 1: comecocos = comecocosesquerra; break;
+        case 2: comecocos = comecocosamunt; break;
+        case 3: comecocos = comecocosabaix; break;
+      }
+
+      if (pos_anterior.x != pacman.x || pos_anterior.y != pacman.y) {
+        if (!chomp.isPlaying()) {
+          chomp.setVolume(0.5);
+          chomp.play();
+        }
+        var index_menjar = mapa.menjar.findIndex(m => m.x == pacman.x && m.y == pacman.y);
+        if (index_menjar > -1) {
+          var punstsumar = ObtenirPuntsTipusMenjar(index_menjar);
+          pacman.punts = pacman.punts + (punstsumar || 1);
+          var menjarobj = mapa.menjar.splice(index_menjar, 1);
+          eatfruit.setVolume(0.5);
+          eatfruit.play();
+        }
+      } else {
+        if (pacman.paret) {
+          pacman.vides = pacman.vides - 1;
+          pacman.paret = false;
+
+          var dialog = bootbox.dialog({
+            message: '<p class="text-center mb-0"><i class="fa fa-spin fa-cog"></i><strong>Compte!</strong> Has perdut una vida!</p>',
+            centerVertical: true,
+            closeButton: false
+          });
+
+          window.setTimeout(function () {
+            dialog.modal('hide');
+          }, 500);
+
+          //   $('#alerta').show();
+          //   window.setTimeout(function() {
+          //     $('#alerta').hide();
+          // }, 2000);
+        }
+      }
+
+      mapa.Maze[pacman.y][pacman.x] = 4;
+
+      //mostrar parets
+      mapa.roques.forEach(element => {
+        element.Show(p, paret, mapa.SIZE_IMAGE);
+      });
+
+      //mostrar menjar
+      mapa.menjar.forEach(element => {
+        var imatgecarregar = null;
+        switch (element.tipus) {
+          case 0:
+            imatgecarregar = bola;
+            break;
+          case 1:
+            imatgecarregar = grapes2;
+            break;
+          case 2:
+            imatgecarregar = grapes;
+            break;
+          default:
+            imatgecarregar = bola;
+            break;
+        }
+        element.Show(p, imatgecarregar, mapa.SIZE_IMAGE);
+      });
+
+      //mostrar pacman
+      pacman.Show(p, comecocos, mapa.SIZE_IMAGE);
+
+      var perdre = pacman.vides < 0;
+      var guanyar = !perdre && (mapa?.menjar == undefined || mapa?.menjar?.length == 0);
+
+      if (guanyar || perdre) {
+        p.noLoop();
+        canvasp52.noLoop();
+        if (perdre) {
+          death.setVolume(0.5);
+          death.play();
+        }
+
+        if (guanyar) {
+          var puntuacions = JSON.parse(window.localStorage.getItem("puntuacions")) || [];
+          var pusuari = puntuacions.find(p => p.Nom == nom && parseInt(p.Dificultat) == parseInt(dificultat));
+          if (pusuari) {
+            if (pusuari.Punts < pacman.punts) {
+              pusuari.Punts = pacman.punts;
+            }
+          } else puntuacions.push({ Nom: nom, Punts: pacman.punts, Dificultat: parseInt(dificultat) });
+          storage.setItem("puntuacions", JSON.stringify(puntuacions));
+        }
+
+
+        bootbox.confirm({
+          message: (guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?",
           centerVertical: true,
-          closeButton: false
-        });
-        
-        window.setTimeout(function() {
-          dialog.modal('hide');
-        }, 500);
-
-      //   $('#alerta').show();
-      //   window.setTimeout(function() {
-      //     $('#alerta').hide();
-      // }, 2000);
-      }
-    }
-
-    mapa.Maze[pacman.y][pacman.x] = 4;
-
-    //mostrar parets
-    mapa.roques.forEach(element => {
-      element.Show(p, paret, mapa.SIZE_IMAGE);
-    });
-
-    //mostrar menjar
-    mapa.menjar.forEach(element => {
-      var imatgecarregar = null;
-      switch (element.tipus) {
-        case 0:
-          imatgecarregar = bola;
-          break;
-        case 1:
-          imatgecarregar = grapes2;
-          break;
-        case 2:
-          imatgecarregar = grapes;
-          break;
-        default:
-          imatgecarregar = bola;
-          break;
-      }
-      element.Show(p, imatgecarregar, mapa.SIZE_IMAGE);
-    });
-
-    //mostrar pacman
-    pacman.Show(p, comecocos, mapa.SIZE_IMAGE);
-
-    var perdre = pacman.vides < 0;
-    var guanyar = !perdre && (mapa?.menjar == undefined || mapa?.menjar?.length == 0);
-
-    if (guanyar || perdre) {
-      p.noLoop();
-      canvasp52.noLoop();
-      if (perdre) {
-        death.setVolume(0.5);
-        death.play();
-      }
-
-      if (guanyar){
-        var puntuacions = JSON.parse(window.localStorage.getItem("puntuacions")) || [];
-        var pusuari = puntuacions.find(p => p.Nom == nom && parseInt(p.Dificultat) == parseInt(dificultat));
-        if (pusuari){
-          if (pusuari.Punts < pacman.punts){
-            pusuari.Punts = pacman.punts;
-          }
-        } else puntuacions.push({Nom: nom, Punts: pacman.punts, Dificultat: parseInt(dificultat)});
-        storage.setItem("puntuacions", JSON.stringify(puntuacions));
-      }
-
-
-      bootbox.confirm({
-        message: (guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?",
-        centerVertical: true,
-        buttons: {
+          buttons: {
             confirm: {
-                label: 'Yes',
-                className: 'btn-success'
+              label: 'Yes',
+              className: 'btn-success'
             },
             cancel: {
-                label: 'No',
-                className: 'btn-danger'
+              label: 'No',
+              className: 'btn-danger'
             }
-        },
-        callback: function (result) {
-          if (result) {
-            IniciarJoc(p);
-            millisrestar += canvasp52.millis();
-          } else {
-            location.reload();
+          },
+          callback: function (result) {
+            if (result) {
+              IniciarJoc(p);
+              millisrestar += canvasp52.millis();
+            } else {
+              location.reload();
+            }
           }
-        }
-    });
+        });
 
-      // if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")) {
-      //   IniciarJoc(p);
-      //   p.loop();
-      //   millisrestar += canvasp52.millis();
-      // } else {
-      //   location.reload();
-      // }
+        // if (confirm((guanyar ? "Has guanyat" : "Has perdut") + ", Vols tornar a jugar?")) {
+        //   IniciarJoc(p);
+        //   p.loop();
+        //   millisrestar += canvasp52.millis();
+        // } else {
+        //   location.reload();
+        // }
+      }
+      // debugger;
     }
-    // debugger;
-  }
   };
 
   p.keyPressed = function () {
@@ -357,48 +381,48 @@ function IniciarJoc(p) {
       inputType: 'number',
       centerVertical: true,
       callback: function (result) {
-          if (result){
-            alcada = parseInt(result);
-            if (alcada > parseInt((p.windowHeight - 100) / 32)){
-              alcada = parseInt((p.windowHeight - 100) / 32);                    
-            }
-          }
-          else {
+        if (result) {
+          alcada = parseInt(result);
+          if (alcada > parseInt((p.windowHeight - 100) / 32)) {
             alcada = parseInt((p.windowHeight - 100) / 32);
           }
-          bootbox.prompt({
-            title: "Amplada mapa",
-            inputType: 'number',
-            centerVertical: true,
-            callback: function (result2) {
-                if (result2){
-                  amplada = parseInt(result2);
-                  if (amplada > parseInt((p.windowWidth - 100) / 32)){
-                    amplada = parseInt((p.windowWidth - 100) / 32);                    
-                  }
-                }
-                else{
-                  amplada = parseInt((p.windowWidth - 100) / 32);
-                }
-                mapa = new Mapa(amplada, alcada, 32, p);
-                let height = mapa.Rows * mapa.SIZE_IMAGE;
-                let width = mapa.Columns * mapa.SIZE_IMAGE;
-
-                pacman = new Pacman(0, 0);
-
-                posicioPacman();
-                mapa.Maze[pacman.y][pacman.x] = 4;
-
-                p.createCanvas(height, width);
-                // p.frameRate(dificultat);
-                $("canvas").css("position", "absolute");
-                $("canvas").css("top", "50%");
-                $("canvas").css("left", "50%");
-                $("canvas").addClass("transform");
-                p.loop();
-                canvasp52.loop();
+        }
+        else {
+          alcada = parseInt((p.windowHeight - 100) / 32);
+        }
+        bootbox.prompt({
+          title: "Amplada mapa",
+          inputType: 'number',
+          centerVertical: true,
+          callback: function (result2) {
+            if (result2) {
+              amplada = parseInt(result2);
+              if (amplada > parseInt((p.windowWidth - 100) / 32)) {
+                amplada = parseInt((p.windowWidth - 100) / 32);
+              }
             }
-          });
+            else {
+              amplada = parseInt((p.windowWidth - 100) / 32);
+            }
+            mapa = new Mapa(amplada, alcada, 32, p);
+            let height = mapa.Rows * mapa.SIZE_IMAGE;
+            let width = mapa.Columns * mapa.SIZE_IMAGE;
+
+            pacman = new Pacman(0, 0);
+
+            posicioPacman();
+            mapa.Maze[pacman.y][pacman.x] = 4;
+
+            p.createCanvas(height, width);
+            // p.frameRate(dificultat);
+            $("canvas").css("position", "absolute");
+            $("canvas").css("top", "50%");
+            $("canvas").css("left", "50%");
+            $("canvas").addClass("transform");
+            p.loop();
+            canvasp52.loop();
+          }
+        });
       }
     });
   }

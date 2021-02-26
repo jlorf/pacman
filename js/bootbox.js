@@ -70,9 +70,9 @@
 
   var locales = {
     en : {
-      OK      : 'OK',
-      CANCEL  : 'Cancel',
-      CONFIRM : 'OK'
+      OK      : 'ACCEPTAR',
+      CANCEL  : 'CANCELAR',
+      CONFIRM : 'ACCEPTAR'
     }
   };
 

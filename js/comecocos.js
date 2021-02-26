@@ -364,7 +364,7 @@ const s = p => {
           centerVertical: true,
           buttons: {
             confirm: {
-              label: 'Yes',
+              label: 'Si',
               className: 'btn-success'
             },
             cancel: {

@@ -558,7 +558,7 @@ function ObtenirPuntsTipusMenjar(index_menjar) {
 }
 
 $(document).ready(function () {
-  $('#alerta').hide();
+  // $('#alerta').hide();
   canvasp5 = new p5(s, 'pacman');
   canvasp52 = new p5(s2, 'puntuacio');
   canvasp5.noLoop();

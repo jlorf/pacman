@@ -51,7 +51,7 @@ let tempsrestant;
 
 let timeelapsed;
 
-let temps;
+let temps = 0;
 
 const s3 = p3 => {
   let MENU = 0

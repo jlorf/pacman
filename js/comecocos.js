@@ -214,7 +214,7 @@ const s = p => {
 
   p.draw = function () {
     if (p.isLooping()) {
-      canvasp5.frameRate(parseInt(dificultat) || 5);
+      if (!fpstimeout) canvasp5.frameRate(parseInt(dificultat) || 5);
       p.background(0);
       // mapa.Maze[pacman.y][pacman.x] = -1;
 

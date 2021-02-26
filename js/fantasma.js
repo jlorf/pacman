@@ -16,10 +16,10 @@ class Fantasma extends GameObject {
 
             this.y = this.y + (this.dir == 1 ? 1 : this.dir == 2 ? -1 : 0);
             if (this.y < 0) this.y = 0;
-            else if (this.y > mapa.Rows - 1) this.y = mapa.Rows - 1;
+            else if (this.y > mapa.ROWS - 1) this.y = mapa.ROWS - 1;
             if (this.x < 0) this.x = 0;
-            else if (this.x > mapa.Columns - 1)
-                this.x = mapa.Columns - 1;
+            else if (this.x > mapa.COLUMNS - 1)
+                this.x = mapa.COLUMNS - 1;
             this.x = this.x + (this.dir == 3 ? -1 : this.dir == 4 ? 1 : 0);
             try {
                  if (!this.ComprovarParets(anterior, mapa)) {
@@ -50,14 +50,14 @@ class Fantasma extends GameObject {
             posthis = new Posicio(anterior.row, anterior.column);
             this.dir = -1;
         }
-        if (this.y >= mapa.Rows) {
+        if (this.y >= mapa.ROWS) {
             posthis = new Posicio(anterior.row, anterior.column);
             this.dir = -1;
         } else if (this.y < 0) {
             this.dir = -1;
             posthis = new Posicio(anterior.row, anterior.column);
         }
-        if (this.x >= mapa.Columns) {
+        if (this.x >= mapa.COLUMNS) {
             posthis = new Posicio(anterior.row, anterior.column);
             this.dir = -1;
         } else if (this.x < 0) {

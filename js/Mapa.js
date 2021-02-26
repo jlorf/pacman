@@ -191,14 +191,13 @@ class Mapa {
                     board[i][j] = 1;
                     this.roques.push(new Roca(j, i));
                 } else if (board[i][j] === Cell.visited){
-                    let rnd = getRandomArbitrary(0, 1);
+                    let rnd = getRandomArbitrary(0, 2);
                     if (rnd == 1) rnd = -1;
                     if (rnd == 0) {                        
                         this.menjar.push(new Menjar(j, i));
-                    } else 
+                    } else if (rnd == 2)
                     {
                         this.powerups.push(new PowerUp(j, i));
-                        rnd = -2;
                     }
                     board[i][j] = rnd;
                 }

@@ -12,10 +12,10 @@ class Pacman extends GameObject {
             let anterior = new Posicio(this.y, this.x);
             this.y = this.y + (this.direction == 0 ? 1 : this.direction == 1 ? -1 : 0);
             if (this.y < 0) this.y = 0;
-            else if (this.y > mapa.Rows - 1) this.y = mapa.Rows - 1;
+            else if (this.y > mapa.ROWS - 1) this.y = mapa.ROWS - 1;
             if (this.x < 0) this.x = 0;
-            else if (this.x > mapa.Columns - 1)
-                this.x = mapa.Columns - 1;
+            else if (this.x > mapa.COLUMNS - 1)
+                this.x = mapa.COLUMNS - 1;
             this.x = this.x + (this.direction == 2 ? -1 : this.direction == 3 ? 1 : 0);
             try {
                 if (
@@ -43,14 +43,14 @@ class Pacman extends GameObject {
             posthis = new Posicio(anterior.row, anterior.column);
             this.direction = -1;
         }
-        if (this.y >= mapa.Rows) {
+        if (this.y >= mapa.ROWS) {
             posthis = new Posicio(anterior.row, anterior.column);
             this.direction = -1;
         } else if (this.y < 0) {
             this.direction = -1;
             posthis = new Posicio(anterior.row, anterior.column);
         }
-        if (this.x >= mapa.Columns) {
+        if (this.x >= mapa.COLUMNS) {
             posthis = new Posicio(anterior.row, anterior.column);
             this.direction = -1;
         } else if (this.x < 0) {

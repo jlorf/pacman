@@ -458,8 +458,8 @@ function IniciarJoc(p) {
               amplada = parseInt((p.windowWidth - 100) / 32);
             }
             mapa = new Mapa(amplada, alcada, 32, p);
-            let height = mapa.Rows * mapa.SIZE_IMAGE;
-            let width = mapa.Columns * mapa.SIZE_IMAGE;
+            let height = mapa.ROWS * mapa.SIZE_IMAGE;
+            let width = mapa.COLUMNS * mapa.SIZE_IMAGE;
 
             pacman = new Pacman(0, 0);
 
@@ -484,8 +484,8 @@ function IniciarJoc(p) {
   }
 
   // mapa = new Mapa(amplada, alcada, 32, p);
-  // let height = mapa.Rows * mapa.SIZE_IMAGE;
-  // let width = mapa.Columns * mapa.SIZE_IMAGE;
+  // let height = mapa.ROWS * mapa.SIZE_IMAGE;
+  // let width = mapa.COLUMNS * mapa.SIZE_IMAGE;
 
   // pacman = new Pacman(0, 0);
 
@@ -515,11 +515,11 @@ function IniciarJoc(p) {
 }
 
 function posicioPacman() {
-  // pospacman.row = getRandomArbitrary(0, mapa.Rows - 1);
-  // pospacman.column = getRandomArbitrary(0, mapa.Columns - 1);
+  // pospacman.row = getRandomArbitrary(0, mapa.ROWS - 1);
+  // pospacman.column = getRandomArbitrary(0, mapa.COLUMNS - 1);
   // if (mapa.Maze[pospacman.row][pospacman.column] != -1) posicioPacman();
-  pacman.y = getRandomArbitrary(0, mapa.Rows - 1);
-  pacman.x = getRandomArbitrary(0, mapa.Columns - 1);
+  pacman.y = getRandomArbitrary(0, mapa.ROWS - 1);
+  pacman.x = getRandomArbitrary(0, mapa.COLUMNS - 1);
   if (mapa.Maze[pacman.y][pacman.x] != -1) posicioPacman();
 }
 

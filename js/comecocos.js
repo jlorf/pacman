@@ -13,6 +13,8 @@ let grapes2;
 let fantasma1;
 let fantasma2;
 let transparent;
+let addvida;
+let speedup;
 
 let esquerra, dreta, abaix, amunt;
 
@@ -40,6 +42,8 @@ let nom;
 let storage;
 
 let timeout;
+
+let fpstimeout;
 
 const s3 = p3 => {
   let MENU = 0
@@ -194,6 +198,8 @@ const s = p => {
     fantasma1 = p.loadImage("imatges/fantasma.png");
     fantasma2 = p.loadImage("imatges/fantasma2.png");
     transparent = p.loadImage("imatges/transparent.png");
+    addvida = p.loadImage("imatges/heart.png");
+    speedup = p.loadImage("imatges/speedometer.png");
     comecocos = comecocosdreta;
     beginning = p.loadSound('sons/pacman_beginning.wav');
     chomp = p.loadSound('sons/pacman_chomp.wav');
@@ -237,6 +243,29 @@ const s = p => {
           eatfruit.setVolume(0.5);
           eatfruit.play();
         }
+
+        var index_powerup = mapa.powerups.findIndex(m => m.x == pacman.x && m.y == pacman.y);
+        if (index_powerup > -1) {
+          switch (mapa?.powerups[index_powerup]?.tipus) {
+            case 0:
+              pacman.vides = pacman.vides + 1;
+              break;
+            case 1:
+              p.frameRate(dificultat + 5);
+              if (fpstimeout){
+                window.clearTimeout(fpstimeout);
+              }
+              fpstimeout = window.setTimeout(() => {
+                p.frameRate(dificultat);
+              }, 5000);
+              break;
+            default:
+              index_powerup
+              break;
+          }
+          var pup = mapa.powerups.splice(index_powerup, 1);
+        }
+
       } else {
         if (pacman.paret) {
           pacman.vides = pacman.vides - 1;
@@ -281,6 +310,23 @@ const s = p => {
             break;
           default:
             imatgecarregar = bola;
+            break;
+        }
+        element.Show(p, imatgecarregar, mapa.SIZE_IMAGE);
+      });
+
+      //mostrar menjar
+      mapa.powerups.forEach(element => {
+        var imatgecarregar = null;
+        switch (element.tipus) {
+          case 0:
+            imatgecarregar = addvida;
+            break;
+          case 1:
+            imatgecarregar = speedup;
+            break;
+          default:
+            imatgecarregar = addvida;
             break;
         }
         element.Show(p, imatgecarregar, mapa.SIZE_IMAGE);

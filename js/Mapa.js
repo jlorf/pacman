@@ -41,6 +41,7 @@ class Mapa {
         // this.MAZE = this.OmplirMapa(this.MAZE);
         this.roques = [];
         this.menjar = [];
+        this.powerups = [];
         this.MAZE = this.generarMapa();
     }
 
@@ -194,6 +195,9 @@ class Mapa {
                     if (rnd == 1) rnd = -1;
                     if (rnd == 0) {                        
                         this.menjar.push(new Menjar(j, i));
+                    } else 
+                    {
+                        this.powerups.push(new PowerUp(j, i));
                     }
                     board[i][j] = rnd;
                 }

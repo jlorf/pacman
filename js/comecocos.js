@@ -251,12 +251,12 @@ const s = p => {
               pacman.vides = pacman.vides + 1;
               break;
             case 1:
-              p.frameRate(dificultat + 5);
+              p.frameRate(parseInt(dificultat) + 5);
               if (fpstimeout){
                 window.clearTimeout(fpstimeout);
               }
               fpstimeout = window.setTimeout(() => {
-                p.frameRate(dificultat);
+                p.frameRate(parseInt(dificultat));
               }, 5000);
               break;
             default:

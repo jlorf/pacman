@@ -41,9 +41,13 @@ let nom;
 
 let storage;
 
-let timeout;
+// let timeout;
+
+let timeinterval;
 
 let fpstimeout;
+
+let tempsrestant;
 
 const s3 = p3 => {
   let MENU = 0
@@ -178,6 +182,7 @@ const s2 = p2 => {
     p2.text("Punts: " + pacman.punts || 0, p2.width - 200, 10);
     p2.text("Vides: " + pacman.vides || 0, p2.width - 300, 10);
     p2.text("Dificultat: " + ObtenirDificultat(dificultat), p2.width - 400, 10);
+    p2.text("Restant: " + parseInt(tempsrestant), p2.width - 500, 10);
     p2.text("Nom: " + nom, 50, 10);
   };
 
@@ -341,7 +346,8 @@ const s = p => {
 
       if (guanyar || perdre) {
         p.noLoop();
-        window.clearTimeout(timeout);
+        // window.clearTimeout(timeout);
+        window.clearInterval(timeinterval);
         canvasp52.noLoop();
         if (perdre) {
           death.setVolume(0.5);
@@ -475,9 +481,22 @@ function IniciarJoc(p) {
             $("canvas").addClass("transform");
             p.loop();
             canvasp52.loop();
-            timeout = window.setTimeout(function () {
-              pacman.vides = -1;
-            }, ((((mapa.COLUMNS * mapa.ROWS) - mapa.roques.length) / parseInt(dificultat)) * (parseInt(dificultat) == 5 ? 4 : parseInt(dificultat) == 10 ? 2 : 1.5)) * 1000 + 10000);
+
+            var n = (((((mapa.COLUMNS * mapa.ROWS) - mapa.roques.length) / parseInt(dificultat)) * (parseInt(dificultat) == 5 ? 4 : parseInt(dificultat) == 10 ? 2 : 1.5)) * 1000 + 10000) / 1000;
+            tempsrestant = n;
+            timeinterval = setInterval(countDown,1000);
+
+            function countDown(){
+              tempsrestant--;
+              if(tempsrestant <= 0){
+                  clearInterval(timeinterval);
+                  pacman.vides = -1;
+              }
+            }
+
+            // timeout = window.setTimeout(function () {
+            //   pacman.vides = -1;
+            // }, n);
           }
         });
       }

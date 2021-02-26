@@ -198,6 +198,7 @@ class Mapa {
                     } else 
                     {
                         this.powerups.push(new PowerUp(j, i));
+                        rnd = -2;
                     }
                     board[i][j] = rnd;
                 }

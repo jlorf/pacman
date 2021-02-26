@@ -175,8 +175,9 @@ const s2 = p2 => {
     //reiniciar temps al finalitzar
     time = (p2.millis() - millisrestar) / 1000;
     p2.text("Temps: " + parseInt(time), p2.width - 100, 10);
-    p2.text("Punts: " + pacman?.punts ?? 0, p2.width - 200, 10);
-    p2.text("Vides: " + pacman?.vides ?? 0, p2.width - 300, 10);
+    p2.text("Punts: " + pacman.punts || 0, p2.width - 200, 10);
+    p2.text("Vides: " + pacman.vides || 0, p2.width - 300, 10);
+    p2.text("Dificultat: " + ObtenirDificultat(dificultat), p2.width - 400, 10);
     p2.text("Nom: " + nom, 50, 10);
   };
 
@@ -555,6 +556,25 @@ function ObtenirPuntsTipusMenjar(index_menjar) {
       break;
   }
   return punts;
+}
+
+function ObtenirDificultat(d){
+  let ret = "";
+  switch(d){
+    case 5:
+      ret = "Fàcil";
+      break;
+    case 10 :
+      ret = "Intermig";
+      break;
+      case 20 :
+        ret = "Dificil";
+      break;
+    default:
+      ret = "Fàcil";
+      break;
+  }
+  return ret;
 }
 
 $(document).ready(function () {

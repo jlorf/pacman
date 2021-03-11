@@ -188,6 +188,7 @@ const s2 = p2 => {
     p2.text("Dificultat: " + ObtenirDificultat(dificultat), p2.width - 400, 10);
     p2.text("Restant: " + parseInt(tempsrestant), p2.width - 500, 10);
     p2.text("Nom: " + nom, 50, 10);
+    p2.text("Fps: " + parseInt(canvasp5.frameRate()), 180, 10);
   };
 
   p2.windowResized = function () {
